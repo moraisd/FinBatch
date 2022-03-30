@@ -1,0 +1,5 @@
+rest:
+  base_url: 'https://www.alphavantage.co/query'
+  data_type: 'function'
+  ticker: 'symbol'
+  api_key: 'apikey'

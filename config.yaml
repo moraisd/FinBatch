@@ -1,0 +1,12 @@
+rest:
+  fundamental_data_url: 'https://www.alphavantage.co/query'
+  fundamental_data_key: 'JULI7BLT9T36YLN2'
+  ticker_api_url: 'https://eodhistoricaldata.com/api/exchange-symbol-list/'
+  ticker_api_key: '6234cff2ba7c31.29252804'
+
+db:
+  database_url: 'mongodb://localhost:27017/'
+  database: 'mydatabase'
+
+exchange_list: [ 'US' ]
+
