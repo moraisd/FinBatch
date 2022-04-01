@@ -10,4 +10,3 @@ def get_database(db):
 
 
 database = get_database(config['db']['database'])
-

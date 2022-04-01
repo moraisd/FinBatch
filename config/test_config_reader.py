@@ -1,5 +1,6 @@
-from config.config_reader import ConfigReader
 from unittest import TestCase
+
+from config.config_reader import ConfigReader
 
 
 class TestConfig(TestCase):

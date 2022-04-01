@@ -7,9 +7,11 @@ from dao.companies_dao import CompaniesDao
 class TestCompaniesDao(TestCase):
     def setUp(self):
         self.ticker = 'AAPL'
-        self.data = 'Apple'
+        self.data = {'Symbol': self.ticker, 'Price': '10'}
         self.mock_database = MagicMock()
         self.companies_dao = CompaniesDao(self.mock_database)
+        self.sample_dict = [self.data, {'Symbol': 'MSFT', 'Price': '11'},
+                            {'Symbol': 'AMZN', 'Price': '12'}]
 
     def test_insert_one(self):
         self.companies_dao.insert_one(self.data)
@@ -28,17 +30,18 @@ class TestCompaniesDao(TestCase):
         collection.update_one.assert_called_once_with({'Symbol': self.ticker}, {"$set": self.data})
 
     def test_find_one(self):
-        self.companies_dao.find_one(self.ticker)
-
-        self.mock_database.__getitem__.assert_called_once_with('companies')
-
         collection = self.mock_database['companies']
+        collection.find_one.return_value = self.data
+
+        result = self.companies_dao.find_one(self.ticker)
+
         collection.find_one.assert_called_once_with({'Symbol': self.ticker})
+        self.assertDictEqual(result, self.data)
 
     def test_find_all_tickers(self):
-        self.companies_dao.find_all_tickers()
-
-        self.mock_database.__getitem__.assert_called_once_with('companies')
-
         collection = self.mock_database['companies']
+        collection.find.return_value = self.sample_dict
+
+        result = self.companies_dao.find_all_tickers()
         collection.find.assert_called_once_with({'Symbol': {"$exists": True}}, {'Symbol': True, '_id': False})
+        self.assertListEqual(result, ['AAPL', 'MSFT', 'AMZN'])
