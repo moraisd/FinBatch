@@ -2,6 +2,7 @@ from unittest import TestCase
 from unittest.mock import MagicMock
 
 from dao.companies_dao import CompaniesDao
+from util.constants import symbol_exists_filter, return_tickers_only
 
 
 class TestCompaniesDao(TestCase):
@@ -43,5 +44,5 @@ class TestCompaniesDao(TestCase):
         collection.find.return_value = self.sample_dict
 
         result = self.companies_dao.find_all_tickers()
-        collection.find.assert_called_once_with({'Symbol': {"$exists": True}}, {'Symbol': True, '_id': False})
+        collection.find.assert_called_once_with(symbol_exists_filter, return_tickers_only)
         self.assertListEqual(result, ['AAPL', 'MSFT', 'AMZN'])

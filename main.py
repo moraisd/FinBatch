@@ -13,4 +13,4 @@ from service.companies_service import CompaniesService
 if __name__ == '__main__':
     rest_config = config['rest']
 
-    CompaniesService().update_tickers(config)
+    CompaniesService().update_tickers()
