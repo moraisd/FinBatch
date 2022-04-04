@@ -11,6 +11,5 @@ from service.companies_service import CompaniesService
 # print(companies_dao.find_one('GOOG'))
 
 if __name__ == '__main__':
-    rest_config = config['rest']
 
     CompaniesService().update_tickers()

@@ -1,4 +1,5 @@
 from api.restapi import RestApi
+from config.config_reader import config
 from dao.companies_dao import CompaniesDao
 from db.mongo_db import database
 from service.csv_file_reader import CsvFileReader
@@ -7,9 +8,7 @@ from service.csv_file_reader import CsvFileReader
 class CompaniesService:
     def __init__(self, companies_dao: CompaniesDao = CompaniesDao(database),
                  csv_reader: CsvFileReader = CsvFileReader(),
-                 rest_api: RestApi = RestApi(), config=None) -> None:
-        if config is None:
-            config = {}
+                 rest_api: RestApi = RestApi()) -> None:
         self.companies_dao = companies_dao
         self.csv_reader = csv_reader
         self.rest_api = rest_api
@@ -24,5 +23,8 @@ class CompaniesService:
         ticker_list = self.csv_reader.read_first_column(listed_stocks.text)
 
         database_ticker_list = self.companies_dao.find_all_tickers()
+        new_tickers = [{'Symbol': ticker} for ticker in ticker_list if ticker not in database_ticker_list]
+        delisted_tickers = [ticker for ticker in database_ticker_list if ticker not in ticker_list]
 
-        return [tickers for tickers in ticker_list or database_ticker_list]
+        self.companies_dao.insert_many(new_tickers)
+        self.companies_dao.delete_delisted(delisted_tickers)
