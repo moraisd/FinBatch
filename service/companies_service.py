@@ -1,3 +1,5 @@
+import logging
+
 from api.restapi import RestApi
 from config.config_reader import config
 from dao.companies_dao import CompaniesDao
@@ -20,11 +22,15 @@ class CompaniesService:
             f'{self.config["rest"]["ticker_api_url"]}{self.config["exchange_list"][0]}'
             f'?api_token={self.config["rest"]["ticker_api_key"]}')
 
-        ticker_list = self.csv_reader.read_first_column(listed_stocks.text)
+        ticker_set = self.csv_reader.read_first_column(listed_stocks.text)
 
-        database_ticker_list = self.companies_dao.find_all_tickers()
-        new_tickers = [{'Symbol': ticker} for ticker in ticker_list if ticker not in database_ticker_list]
-        delisted_tickers = [ticker for ticker in database_ticker_list if ticker not in ticker_list]
+        database_ticker_set = self.companies_dao.find_all_tickers()
 
-        self.companies_dao.insert_many(new_tickers)
+        new_tickers = ticker_set - database_ticker_set
+        delisted_tickers = database_ticker_set - ticker_set
+
+        logging.info(f'Number of tickers to be inserted: {len(new_tickers)}')
+        self.companies_dao.insert_tickers(new_tickers)
+
+        logging.info(f'Number of tickers to be delisted: {len(delisted_tickers)}')
         self.companies_dao.delete_delisted(delisted_tickers)

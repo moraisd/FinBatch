@@ -11,8 +11,8 @@ class CompaniesServiceTest(TestCase):
         super().setUp()
 
     def test_update_tickers(self):
-        rest_data = ['AAPL', 'MSFT', 'AMZN', 'FB', 'V', 'VALE3']
-        db_data = ['AAPL', 'MSFT', 'AMZN', 'ABCD']
+        rest_data = {'AAPL', 'MSFT', 'AMZN', 'FB', 'V', 'VALE3'}
+        db_data = {'AAPL', 'MSFT', 'AMZN', 'ABCD'}
 
         self.companies_service.csv_reader.read_first_column.return_value = rest_data
         self.companies_service.companies_dao.find_all_tickers.return_value = db_data
@@ -21,5 +21,5 @@ class CompaniesServiceTest(TestCase):
 
         companies_dao = self.companies_service.companies_dao
 
-        companies_dao.insert_many.assert_called_once_with([{'Symbol': 'FB'}, {'Symbol': 'V'}, {'Symbol': 'VALE3'}])
-        companies_dao.delete_delisted.assert_called_once_with(['ABCD'])
+        companies_dao.insert_tickers.assert_called_once_with({'V', 'VALE3', 'FB'})
+        companies_dao.delete_delisted.assert_called_once_with({'ABCD'})

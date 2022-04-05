@@ -13,6 +13,7 @@ class TestCompaniesDao(TestCase):
         self.companies_dao = CompaniesDao(self.mock_database)
         self.sample_dict = [self.data, {'Symbol': 'MSFT', 'Price': '11'},
                             {'Symbol': 'AMZN', 'Price': '12'}]
+        self.ticker_set = {'AAPL', 'MSFT', 'AMZN'}
 
     def test_insert_one(self):
         self.companies_dao.insert_one(self.data)
@@ -45,4 +46,11 @@ class TestCompaniesDao(TestCase):
 
         result = self.companies_dao.find_all_tickers()
         collection.find.assert_called_once_with(symbol_exists_filter, return_tickers_only)
-        self.assertListEqual(result, ['AAPL', 'MSFT', 'AMZN'])
+        self.assertSetEqual(result, self.ticker_set)
+
+    def test_delete_delisted(self):
+        collection = self.mock_database['companies']
+
+        self.companies_dao.delete_delisted(self.ticker_set)
+
+        collection.delete_many.assert_called_once_with({'Symbol': {'$in': [ticker for ticker in self.ticker_set]}})
