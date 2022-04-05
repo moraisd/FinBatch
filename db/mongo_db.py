@@ -1,12 +1,13 @@
 import pymongo
 
-from config.config_reader import config
 
+class MongoDb:
 
-def get_database(db):
-    my_client = pymongo.MongoClient(config['db']['database_url'])
-    mydb = my_client[db]
-    return mydb
+    def __init__(self, config: dict) -> None:
+        super().__init__()
+        self.config = config
 
-
-database = get_database(config['db']['database'])
+    def get_database(self, db):
+        my_client = pymongo.MongoClient(self.config['db']['database_url'])
+        mydb = my_client[db]
+        return mydb

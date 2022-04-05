@@ -7,4 +7,3 @@ class ConfigReader:
             return yaml.safe_load(file)
 
 
-config = ConfigReader().read("config.yaml")

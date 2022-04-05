@@ -1,14 +1,12 @@
 import logging
 
 from api.restapi import RestApi
-from config.config_reader import config
 from dao.companies_dao import CompaniesDao
-from db.mongo_db import database
 from service.csv_file_reader import CsvFileReader
 
 
 class CompaniesService:
-    def __init__(self, companies_dao: CompaniesDao = CompaniesDao(database),
+    def __init__(self, config: dict, companies_dao: CompaniesDao,
                  csv_reader: CsvFileReader = CsvFileReader(),
                  rest_api: RestApi = RestApi()) -> None:
         self.companies_dao = companies_dao
