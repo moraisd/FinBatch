@@ -8,6 +8,3 @@ class RestApi:
         headers = {'Accept': '*/*'}
 
         return requests.get(url, headers=headers)
-
-
-rest_api = RestApi()

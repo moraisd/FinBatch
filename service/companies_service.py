@@ -2,12 +2,12 @@ import logging
 
 from api.restapi import RestApi
 from dao.companies_dao import CompaniesDao
-from service.csv_file_reader import CsvFileReader
+from service.csv_file_reader import EodCsvFileReader
 
 
 class CompaniesService:
     def __init__(self, config: dict, companies_dao: CompaniesDao,
-                 csv_reader: CsvFileReader = CsvFileReader(),
+                 csv_reader: EodCsvFileReader = EodCsvFileReader(),
                  rest_api: RestApi = RestApi()) -> None:
         self.companies_dao = companies_dao
         self.csv_reader = csv_reader
@@ -17,11 +17,10 @@ class CompaniesService:
 
     def update_tickers(self):
         listed_stocks = self.rest_api.request_get_data(
-            f'{self.config["rest"]["ticker_api_url"]}{self.config["exchange_list"][0]}'
-            f'?api_token={self.config["rest"]["ticker_api_key"]}')
+            f'{self.config["rest"]["ticker_api"]["url"]}{self.config["exchange_list"][0]}'
+            f'?api_token={self.config["rest"]["ticker_api"]["key"]}')
 
-        ticker_set = self.csv_reader.read_first_column(listed_stocks.text)
-
+        ticker_set = self.csv_reader.retrieve_tickers(listed_stocks.text)
         database_ticker_set = self.companies_dao.find_all_tickers()
 
         new_tickers = ticker_set - database_ticker_set
@@ -32,3 +31,5 @@ class CompaniesService:
 
         logging.info(f'Number of tickers to be delisted: {len(delisted_tickers)}')
         self.companies_dao.delete_delisted(delisted_tickers)
+
+    # def update_stocks(self):

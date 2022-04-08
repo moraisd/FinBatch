@@ -1,0 +1,555 @@
+[
+  {
+    "Name": "USA Stocks",
+    "Code": "US",
+    "OperatingMIC": "XNAS, XNYS",
+    "Country": "USA",
+    "Currency": "USD"
+  },
+  {
+    "Name": "London Exchange",
+    "Code": "LSE",
+    "OperatingMIC": "XLON",
+    "Country": "UK",
+    "Currency": "GBP"
+  },
+  {
+    "Name": "Toronto Exchange",
+    "Code": "TO",
+    "OperatingMIC": "XTSE",
+    "Country": "Canada",
+    "Currency": "CAD"
+  },
+  {
+    "Name": "TSX Venture Exchange",
+    "Code": "V",
+    "OperatingMIC": "XTSX",
+    "Country": "Canada",
+    "Currency": "CAD"
+  },
+  {
+    "Name": "NEO Exchange",
+    "Code": "NEO",
+    "OperatingMIC": "NEOE",
+    "Country": "Canada",
+    "Currency": "CAD"
+  },
+  {
+    "Name": "Hamburg Exchange",
+    "Code": "HM",
+    "OperatingMIC": "XHAM",
+    "Country": "Germany",
+    "Currency": "EUR"
+  },
+  {
+    "Name": "Munich Exchange",
+    "Code": "MU",
+    "OperatingMIC": "XMUN",
+    "Country": "Germany",
+    "Currency": "EUR"
+  },
+  {
+    "Name": "XETRA Exchange",
+    "Code": "XETRA",
+    "OperatingMIC": "XETR",
+    "Country": "Germany",
+    "Currency": "EUR"
+  },
+  {
+    "Name": "Dusseldorf Exchange",
+    "Code": "DU",
+    "OperatingMIC": "XDUS",
+    "Country": "Germany",
+    "Currency": "EUR"
+  },
+  {
+    "Name": "Hanover Exchange",
+    "Code": "HA",
+    "OperatingMIC": "XHAN",
+    "Country": "Germany",
+    "Currency": "EUR"
+  },
+  {
+    "Name": "Stuttgart Exchange",
+    "Code": "STU",
+    "OperatingMIC": "XSTU",
+    "Country": "Germany",
+    "Currency": "EUR"
+  },
+  {
+    "Name": "Frankfurt Exchange",
+    "Code": "F",
+    "OperatingMIC": "XFRA",
+    "Country": "Germany",
+    "Currency": "EUR"
+  },
+  {
+    "Name": "Berlin Exchange",
+    "Code": "BE",
+    "OperatingMIC": "XBER",
+    "Country": "Germany",
+    "Currency": "EUR"
+  },
+  {
+    "Name": "Luxembourg Stock Exchange",
+    "Code": "LU",
+    "OperatingMIC": "XLUX",
+    "Country": "Luxembourg",
+    "Currency": "EUR"
+  },
+  {
+    "Name": "Vienna Exchange",
+    "Code": "VI",
+    "OperatingMIC": "XWBO",
+    "Country": "Austria",
+    "Currency": "EUR"
+  },
+  {
+    "Name": "Borsa Italiana",
+    "Code": "MI",
+    "OperatingMIC": "XMIL",
+    "Country": "Italy",
+    "Currency": "EUR"
+  },
+  {
+    "Name": "Euronext Paris",
+    "Code": "PA",
+    "OperatingMIC": "XPAR",
+    "Country": "France",
+    "Currency": "EUR"
+  },
+  {
+    "Name": "Euronext Brussels",
+    "Code": "BR",
+    "OperatingMIC": "XBRU",
+    "Country": "Belgium",
+    "Currency": "EUR"
+  },
+  {
+    "Name": "Euronext Amsterdam",
+    "Code": "AS",
+    "OperatingMIC": "XAMS",
+    "Country": "Netherlands",
+    "Currency": "EUR"
+  },
+  {
+    "Name": "Swiss Exchange",
+    "Code": "VX",
+    "OperatingMIC": "XSWX",
+    "Country": "Switzerland",
+    "Currency": "CHF"
+  },
+  {
+    "Name": "Euronext Lisbon",
+    "Code": "LS",
+    "OperatingMIC": "XLIS",
+    "Country": "Portugal",
+    "Currency": "EUR"
+  },
+  {
+    "Name": "Madrid Exchange",
+    "Code": "MC",
+    "OperatingMIC": "BMEX",
+    "Country": "Spain",
+    "Currency": "EUR"
+  },
+  {
+    "Name": "SIX Swiss Exchange",
+    "Code": "SW",
+    "OperatingMIC": "XSWX",
+    "Country": "Switzerland",
+    "Currency": "CHF"
+  },
+  {
+    "Name": "Copenhagen Exchange",
+    "Code": "CO",
+    "OperatingMIC": "XCSE",
+    "Country": "Denmark",
+    "Currency": "DKK"
+  },
+  {
+    "Name": "Tallinn Exchange",
+    "Code": "TL",
+    "OperatingMIC": "XTAL",
+    "Country": "Estonia",
+    "Currency": "EUR"
+  },
+  {
+    "Name": "Vilnus Exchange",
+    "Code": "VS",
+    "OperatingMIC": "XLIT",
+    "Country": "Lithuania",
+    "Currency": "EUR"
+  },
+  {
+    "Name": "Irish Exchange",
+    "Code": "IR",
+    "OperatingMIC": "XDUB",
+    "Country": "Ireland",
+    "Currency": "EUR"
+  },
+  {
+    "Name": "Riga Exchange",
+    "Code": "RG",
+    "OperatingMIC": "XRIS",
+    "Country": "Latvia",
+    "Currency": "EUR"
+  },
+  {
+    "Name": "Helsinki Exchange",
+    "Code": "HE",
+    "OperatingMIC": "XHEL",
+    "Country": "Finland",
+    "Currency": "EUR"
+  },
+  {
+    "Name": "Iceland Exchange",
+    "Code": "IC",
+    "OperatingMIC": "XICE",
+    "Country": "Iceland",
+    "Currency": "ISK"
+  },
+  {
+    "Name": "First North Denmark",
+    "Code": "NFN",
+    "OperatingMIC": "XCSE",
+    "Country": "Sweden",
+    "Currency": "SEK"
+  },
+  {
+    "Name": "Nasdaq Baltic",
+    "Code": "NB",
+    "OperatingMIC": null,
+    "Country": "Estonia",
+    "Currency": "EUR"
+  },
+  {
+    "Name": "Oslo Stock Exchange",
+    "Code": "OL",
+    "OperatingMIC": "XOSL",
+    "Country": "Norway",
+    "Currency": "NOK"
+  },
+  {
+    "Name": "Stockholm Exchange",
+    "Code": "ST",
+    "OperatingMIC": "XSTO",
+    "Country": "Sweden",
+    "Currency": "SEK"
+  },
+  {
+    "Name": "Tel Aviv Exchange",
+    "Code": "TA",
+    "OperatingMIC": "XTAE",
+    "Country": "Israel",
+    "Currency": "ILS"
+  },
+  {
+    "Name": "Hong Kong Exchange",
+    "Code": "HK",
+    "OperatingMIC": "XHKG",
+    "Country": "Hong Kong",
+    "Currency": "HKD"
+  },
+  {
+    "Name": "Korea Stock Exchange",
+    "Code": "KO",
+    "OperatingMIC": "XKRX",
+    "Country": "Korea",
+    "Currency": "KRW"
+  },
+  {
+    "Name": "KOSDAQ",
+    "Code": "KQ",
+    "OperatingMIC": "XKOS",
+    "Country": "Korea",
+    "Currency": "KRW"
+  },
+  {
+    "Name": "Budapest Stock Exchange",
+    "Code": "BUD",
+    "OperatingMIC": "XBUD",
+    "Country": "Hungary",
+    "Currency": "HUF"
+  },
+  {
+    "Name": "Warsaw Stock Exchange",
+    "Code": "WAR",
+    "OperatingMIC": "XWAR",
+    "Country": "Poland",
+    "Currency": "PLN"
+  },
+  {
+    "Name": "Philippine Stock Exchange",
+    "Code": "PSE",
+    "OperatingMIC": "XPHS",
+    "Country": "Philippines",
+    "Currency": "PHP"
+  },
+  {
+    "Name": "Singapore Exchange",
+    "Code": "SG",
+    "OperatingMIC": "XSES",
+    "Country": "Singapore",
+    "Currency": "SGD"
+  },
+  {
+    "Name": "Bombay Exchange",
+    "Code": "BSE",
+    "OperatingMIC": "XBOM",
+    "Country": "India",
+    "Currency": "INR"
+  },
+  {
+    "Name": "Shanghai Exchange",
+    "Code": "SHG",
+    "OperatingMIC": "XSHG",
+    "Country": "China",
+    "Currency": "CNY"
+  },
+  {
+    "Name": "Shenzhen Exchange",
+    "Code": "SHE",
+    "OperatingMIC": "XSHE",
+    "Country": "China",
+    "Currency": "CNY"
+  },
+  {
+    "Name": "Karachi Stock Exchange",
+    "Code": "KAR",
+    "OperatingMIC": "XKAR",
+    "Country": "Pakistan",
+    "Currency": "PKR"
+  },
+  {
+    "Name": "Jakarta Exchange",
+    "Code": "JK",
+    "OperatingMIC": "XIDX",
+    "Country": "Indonesia",
+    "Currency": "IDR"
+  },
+  {
+    "Name": "Australia Exchange",
+    "Code": "AU",
+    "OperatingMIC": "XASX",
+    "Country": "Australia",
+    "Currency": "AUD"
+  },
+  {
+    "Name": "NSE (India)",
+    "Code": "NSE",
+    "OperatingMIC": "XNSE",
+    "Country": "India",
+    "Currency": "INR"
+  },
+  {
+    "Name": "Saudi Arabia Exchange",
+    "Code": "SR",
+    "OperatingMIC": "XSAU",
+    "Country": "Saudi Arabia",
+    "Currency": "SAR"
+  },
+  {
+    "Name": "Thailand Exchange",
+    "Code": "BK",
+    "OperatingMIC": "XBKK",
+    "Country": "Thailand",
+    "Currency": "THB"
+  },
+  {
+    "Name": "Johannesburg Exchange",
+    "Code": "JSE",
+    "OperatingMIC": "XJSE",
+    "Country": "South Africa",
+    "Currency": "ZAR"
+  },
+  {
+    "Name": "Athens Exchange",
+    "Code": "AT",
+    "OperatingMIC": "ASEX",
+    "Country": "Greece",
+    "Currency": "EUR"
+  },
+  {
+    "Name": "Chilean Stock Exchange",
+    "Code": "SN",
+    "OperatingMIC": "XSGO",
+    "Country": "Chile",
+    "Currency": "CLP"
+  },
+  {
+    "Name": "Colombo Stock Exchange",
+    "Code": "CM",
+    "OperatingMIC": "XCOL",
+    "Country": "Sri Lanka",
+    "Currency": "LKR"
+  },
+  {
+    "Name": "Vietnam Stocks",
+    "Code": "VN",
+    "OperatingMIC": "HSTC",
+    "Country": "Vietnam",
+    "Currency": "VND"
+  },
+  {
+    "Name": "Kuala Lumpur Exchange",
+    "Code": "KLSE",
+    "OperatingMIC": "XKLS",
+    "Country": "Malaysia",
+    "Currency": "MYR"
+  },
+  {
+    "Name": "Bucharest Stock Exchange",
+    "Code": "RO",
+    "OperatingMIC": "XBSE",
+    "Country": "Romania",
+    "Currency": "RON"
+  },
+  {
+    "Name": "Buenos Aires Exchange",
+    "Code": "BA",
+    "OperatingMIC": "XBUE",
+    "Country": "Argentina",
+    "Currency": "ARS"
+  },
+  {
+    "Name": "Sao Paolo Exchange",
+    "Code": "SA",
+    "OperatingMIC": "BVMF",
+    "Country": "Brazil",
+    "Currency": "BRL"
+  },
+  {
+    "Name": "Mexican Exchange",
+    "Code": "MX",
+    "OperatingMIC": "XMEX",
+    "Country": "Mexico",
+    "Currency": "MXN"
+  },
+  {
+    "Name": "London IL",
+    "Code": "IL",
+    "OperatingMIC": "XLON",
+    "Country": "UK",
+    "Currency": "USD"
+  },
+  {
+    "Name": "Zagreb Stock Exchange",
+    "Code": "ZSE",
+    "OperatingMIC": "XZAG",
+    "Country": "Croatia",
+    "Currency": "HRK"
+  },
+  {
+    "Name": "Borsa Italiana Certificates",
+    "Code": "ETLX",
+    "OperatingMIC": null,
+    "Country": "Italy",
+    "Currency": "EUR"
+  },
+  {
+    "Name": "EU Bond Virtual Exchange",
+    "Code": "EUBOND",
+    "OperatingMIC": null,
+    "Country": "Belgium",
+    "Currency": "EUR"
+  },
+  {
+    "Name": "Indices",
+    "Code": "INDX",
+    "OperatingMIC": null,
+    "Country": "Unknown",
+    "Currency": "Unknown"
+  },
+  {
+    "Name": "Taiwan Exchange",
+    "Code": "TW",
+    "OperatingMIC": "XTAI",
+    "Country": "Taiwan",
+    "Currency": "TWD"
+  },
+  {
+    "Name": "MICEX Moscow Russia",
+    "Code": "MCX",
+    "OperatingMIC": null,
+    "Country": "Russia",
+    "Currency": "RUB"
+  },
+  {
+    "Name": "Bolsa de Valores de Lima",
+    "Code": "LIM",
+    "OperatingMIC": "XLIM",
+    "Country": "Peru",
+    "Currency": "PEN"
+  },
+  {
+    "Name": "Government Bonds",
+    "Code": "GBOND",
+    "OperatingMIC": null,
+    "Country": "Unknown",
+    "Currency": "Unknown"
+  },
+  {
+    "Name": "Istanbul Stock Exchange",
+    "Code": "IS",
+    "OperatingMIC": "XIST",
+    "Country": "Turkey",
+    "Currency": "TRY"
+  },
+  {
+    "Name": "Money Market Virtual Exchange",
+    "Code": "MONEY",
+    "OperatingMIC": null,
+    "Country": "Unknown",
+    "Currency": "Unknown"
+  },
+  {
+    "Name": "Europe Fund Virtual Exchange",
+    "Code": "EUFUND",
+    "OperatingMIC": null,
+    "Country": "USA",
+    "Currency": "EUR"
+  },
+  {
+    "Name": "Taiwan OTC Exchange",
+    "Code": "TWO",
+    "OperatingMIC": "ROCO",
+    "Country": "Taiwan",
+    "Currency": "TWD"
+  },
+  {
+    "Name": "Bond Virtual Exchange",
+    "Code": "BOND",
+    "OperatingMIC": null,
+    "Country": "USA",
+    "Currency": "USD"
+  },
+  {
+    "Name": "FOREX",
+    "Code": "FOREX",
+    "OperatingMIC": "CDSL",
+    "Country": "Unknown",
+    "Currency": "Unknown"
+  },
+  {
+    "Name": "Commodities",
+    "Code": "COMM",
+    "OperatingMIC": null,
+    "Country": "Unknown",
+    "Currency": "Unknown"
+  },
+  {
+    "Name": "Cryptocurrencies",
+    "Code": "CC",
+    "OperatingMIC": "CRYP",
+    "Country": "Unknown",
+    "Currency": "Unknown"
+  },
+  {
+    "Name": "Canadian Securities Exchange",
+    "Code": "CN",
+    "OperatingMIC": "XCNQ",
+    "Country": "Canada",
+    "Currency": "CAD"
+  }
+]

@@ -1,9 +1,14 @@
 rest:
-  fundamental_data_url: 'https://www.alphavantage.co/query'
-  fundamental_data_key: 'JULI7BLT9T36YLN2'
-  ticker_api_url: 'https://eodhistoricaldata.com/api/exchange-symbol-list/'
-  ticker_api_key: '6234cff2ba7c31.29252804'
-
+  fundamental_data:
+    url: 'https://www.alphavantage.co/query'
+    key: 'JULI7BLT9T36YLN2'
+    requests_per_minute: 5
+    requests_per_day: 500
+  ticker_api:
+    url: 'https://eodhistoricaldata.com/api/exchange-symbol-list/'
+    key: '6234cff2ba7c31.29252804'
+    requests_per_minute: 20
+    requests_per_day: 20
 db:
   database_url: 'mongodb://localhost:27017/'
   database: 'mydatabase'
