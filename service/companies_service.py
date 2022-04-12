@@ -6,6 +6,7 @@ from service.csv_file_reader import EodCsvFileReader
 
 
 class CompaniesService:
+
     def __init__(self, config: dict, companies_dao: CompaniesDao,
                  csv_reader: EodCsvFileReader = EodCsvFileReader(),
                  rest_api: RestApi = RestApi()) -> None:
@@ -13,6 +14,7 @@ class CompaniesService:
         self.csv_reader = csv_reader
         self.rest_api = rest_api
         self.config = config
+        self.log = logging.getLogger(__name__)
         super().__init__()
 
     def update_tickers(self):
@@ -26,10 +28,10 @@ class CompaniesService:
         new_tickers = ticker_set - database_ticker_set
         delisted_tickers = database_ticker_set - ticker_set
 
-        logging.info(f'Number of tickers to be inserted: {len(new_tickers)}')
+        self.log.info(f'Number of tickers to be inserted: {len(new_tickers)}')
         self.companies_dao.insert_tickers(new_tickers)
 
-        logging.info(f'Number of tickers to be delisted: {len(delisted_tickers)}')
+        self.log.info(f'Number of tickers to be delisted: {len(delisted_tickers)}')
         self.companies_dao.delete_delisted(delisted_tickers)
 
     # def update_stocks(self):

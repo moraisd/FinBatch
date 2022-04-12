@@ -1,12 +1,9 @@
+import logging.config
+
 from config.config_reader import ConfigReader
-from dao.companies_dao import CompaniesDao
-from db.mongo_db import MongoDb
-from service.companies_service import CompaniesService
 
-config = ConfigReader().read("config.yaml")
+reader = ConfigReader().read
 
-database = MongoDb(config).get_database(config['db']['database'])
+config = reader("config.yaml")
 
-companies_dao = CompaniesDao(database)
-
-companies_service = CompaniesService(config, companies_dao)
+logging.config.dictConfig(reader('logging.yaml'))

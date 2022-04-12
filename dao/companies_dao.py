@@ -11,7 +11,7 @@ class CompaniesDao:
     def insert_one(self, data) -> None:
         self.database['companies'].insert_one(data)
 
-    def insert_tickers(self, tickers) -> None:
+    def insert_tickers(self, tickers: set) -> None:
         self.database['companies'].insert_many([{'Symbol': ticker} for ticker in tickers])
 
     def update_one(self, ticker, data) -> None:
@@ -24,5 +24,5 @@ class CompaniesDao:
         return {field.get('Symbol') for field in
                 self.database['companies'].find(symbol_exists_filter, return_tickers_only)}
 
-    def delete_delisted(self, delisted_tickers) -> None:
+    def delete_delisted(self, delisted_tickers: set) -> None:
         self.database['companies'].delete_many({'Symbol': {'$in': list(delisted_tickers)}})
