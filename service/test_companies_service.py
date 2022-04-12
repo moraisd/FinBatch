@@ -1,5 +1,5 @@
 from unittest import TestCase
-from unittest.mock import Mock
+from unittest.mock import Mock, MagicMock
 
 from service.companies_service import CompaniesService
 
@@ -7,7 +7,7 @@ from service.companies_service import CompaniesService
 class CompaniesServiceTest(TestCase):
 
     def setUp(self) -> None:
-        self.companies_service = CompaniesService(Mock(), Mock(), Mock())
+        self.companies_service = CompaniesService(MagicMock(), Mock(), Mock(), Mock())
         super().setUp()
 
     def test_update_tickers(self):

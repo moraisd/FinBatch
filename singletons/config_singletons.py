@@ -1,9 +1,12 @@
 import logging.config
+import os
 
 from config.config_reader import ConfigReader
 
-reader = ConfigReader().read
+ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..'))
 
-config = reader("config.yaml")
+read = ConfigReader().read
 
-logging.config.dictConfig(reader('logging.yaml'))
+config = read("config.yaml")
+
+logging.config.dictConfig(read('logging.yaml'))
