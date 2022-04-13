@@ -2,7 +2,7 @@ import logging
 
 from api.restapi import RestApi
 from dao.companies_dao import CompaniesDao
-from service.csv_file_reader import EodCsvFileReader
+from service.eod_csv_file_reader import EodCsvFileReader
 
 
 class CompaniesService:
@@ -18,20 +18,33 @@ class CompaniesService:
         super().__init__()
 
     def update_tickers(self):
-        listed_stocks = self.rest_api.request_get_data(
-            f'{self.config["rest"]["ticker_api"]["url"]}{self.config["exchange_list"][0]}'
-            f'?api_token={self.config["rest"]["ticker_api"]["key"]}')
+        ticker_set = set()
+        for exchange in self.config['exchange_list']:
+            listed_stocks = self.rest_api.request_get_data(self.__get_ticker_url(exchange))
+            ticker_set |= self.csv_reader.retrieve_tickers(listed_stocks.text)
 
-        ticker_set = self.csv_reader.retrieve_tickers(listed_stocks.text)
         database_ticker_set = self.companies_dao.find_all_tickers()
 
         new_tickers = ticker_set - database_ticker_set
         delisted_tickers = database_ticker_set - ticker_set
 
-        self.log.info(f'Number of tickers to be inserted: {len(new_tickers)}')
-        self.companies_dao.insert_tickers(new_tickers)
+        new_tickers_total = len(new_tickers)
+        if new_tickers_total:
+            self.log.info(f'Number of tickers to be inserted: {new_tickers_total}')
+            self.companies_dao.insert_tickers(new_tickers)
 
-        self.log.info(f'Number of tickers to be delisted: {len(delisted_tickers)}')
-        self.companies_dao.delete_delisted(delisted_tickers)
+        delisted_tickers_total = len(delisted_tickers)
+        if delisted_tickers_total:
+            self.log.info(f'Number of tickers to be delisted: {delisted_tickers_total}')
+            self.companies_dao.delete_delisted(delisted_tickers)
 
-    # def update_stocks(self):
+    def __get_ticker_url(self, exchange) -> str:
+        return str(self.config['rest']['ticker_api']['url']).replace('$exchange', exchange).replace('$key',
+                                                                                                    self.config['rest'][
+                                                                                                        'ticker_api'][
+                                                                                                        'key'])
+
+    def update_stocks(self):
+        stock_data = self.rest_api.request_get_data(
+            f'{self.config["rest"]["fundamental_data_api"]["url"]}{self.config["exchange_list"][0]}'
+            f'?api_token={self.config["rest"]["ticker_api"]["key"]}')

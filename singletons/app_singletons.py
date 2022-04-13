@@ -5,6 +5,6 @@ from singletons.config_singletons import config
 
 database = MongoDb(config).get_database(config['db']['database'])
 
-companies_dao = CompaniesDao(database)
+companies_dao = CompaniesDao(database['companies'])
 
 companies_service = CompaniesService(config, companies_dao)

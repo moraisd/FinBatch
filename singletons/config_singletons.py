@@ -7,6 +7,6 @@ ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..'))
 
 read = ConfigReader().read
 
-config = read("config.yaml")
+config = read(os.path.join(ROOT_DIR, "config.yaml"))
 
-logging.config.dictConfig(read('logging.yaml'))
+logging.config.dictConfig(read(os.path.join(ROOT_DIR, 'logging.yaml')))

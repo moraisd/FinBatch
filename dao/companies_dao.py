@@ -1,28 +1,34 @@
-from pymongo.database import Database
+from pymongo import UpdateOne
+from pymongo.collection import Collection
 
 from util.constants import symbol_exists_filter, return_tickers_only
 
 
 class CompaniesDao:
 
-    def __init__(self, database: Database):
-        self.database = database
+    def __init__(self, companies_collection: Collection):
+        self.companies = companies_collection
 
     def insert_one(self, data) -> None:
-        self.database['companies'].insert_one(data)
+        self.companies.insert_one(data)
 
     def insert_tickers(self, tickers: set) -> None:
-        self.database['companies'].insert_many([{'Symbol': ticker} for ticker in tickers])
+        self.companies.insert_many([{'Symbol': ticker} for ticker in tickers])
 
-    def update_one(self, ticker, data) -> None:
-        self.database['companies'].update_one({'Symbol': ticker}, {"$set": data})
+    def update_one(self, ticker: str, data) -> None:
+        self.companies.update_one({'Symbol': ticker}, {"$set": data})
 
-    def find_one(self, ticker) -> dict:
-        return self.database['companies'].find_one({'Symbol': ticker})
+    def find_one(self, ticker: str) -> dict:
+        return self.companies.find_one({'Symbol': ticker})
 
     def find_all_tickers(self) -> set:
         return {field.get('Symbol') for field in
-                self.database['companies'].find(symbol_exists_filter, return_tickers_only)}
+                self.companies.find(symbol_exists_filter, return_tickers_only)}
 
     def delete_delisted(self, delisted_tickers: set) -> None:
-        self.database['companies'].delete_many({'Symbol': {'$in': list(delisted_tickers)}})
+        self.companies.delete_many({'Symbol': {'$in': list(delisted_tickers)}})
+
+    def update_stocks(self, stocks_data: list):
+        return self.companies.bulk_write(
+            [UpdateOne(stock['Symbol'], stock) for stock in stocks_data]
+        )

@@ -1,7 +1,7 @@
 import os.path
 from unittest import TestCase
 
-from service.csv_file_reader import EodCsvFileReader
+from service.eod_csv_file_reader import EodCsvFileReader
 from singletons.config_singletons import ROOT_DIR
 
 

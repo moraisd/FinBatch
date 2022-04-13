@@ -1,17 +1,58 @@
 rest:
-  fundamental_data:
-    url: 'https://www.alphavantage.co/query'
-    key: 'JULI7BLT9T36YLN2'
+  fundamental_data_api:
+    url: 'https://www.alphavantage.co/query?function=$function&symbol=$symbol&apikey=$key'
+    key: JULI7BLT9T36YLN2
     requests_per_minute: 5
     requests_per_day: 500
   ticker_api:
-    url: 'https://eodhistoricaldata.com/api/exchange-symbol-list/'
+    url: 'https://eodhistoricaldata.com/api/exchange-symbol-list/$exchange?api_token=$key'
     key: '6234cff2ba7c31.29252804'
     requests_per_minute: 20
     requests_per_day: 20
 db:
   database_url: 'mongodb://localhost:27017/'
-  database: 'mydatabase'
+  database: mydatabase
 
-exchange_list: [ 'US' ]
-
+exchange_list:
+  - US
+  - LSE
+  - TO
+  - V
+  - NEO
+  - HM
+  - MU
+  - XETRA
+  - DU
+  - HA
+  - STU
+  - F
+  - BE
+  - LU
+  - VI
+  - MI
+  - PA
+  - BR
+  - AS
+  - VX
+  - LS
+  - MC
+  - SW
+  - CO
+  - TL
+  - VS
+  - IR
+  - RG
+  - HE
+  - IC
+  - NFN
+  - NB
+  - OL
+  - ST
+  - HK
+  - KO
+  - KQ
+  - WAR
+  - SG
+  - AU
+  - IL
+  - TW
