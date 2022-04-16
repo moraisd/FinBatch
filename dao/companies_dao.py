@@ -1,3 +1,4 @@
+import pymongo
 from pymongo import UpdateOne
 from pymongo.collection import Collection
 
@@ -32,3 +33,9 @@ class CompaniesDao:
         return self.companies.bulk_write(
             [UpdateOne(stock['Symbol'], stock) for stock in stocks_data]
         )
+
+    def bulk_write(self, operations: list):
+        return self.companies.bulk_write(operations)
+
+    def find_outdated_stocks(self, limit):
+        return self.companies.find().sort('lastUpdated', pymongo.DESCENDING).limit(limit)

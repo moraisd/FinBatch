@@ -18,6 +18,7 @@ class CompaniesService:
         super().__init__()
 
     def update_tickers(self):
+
         ticker_set = set()
         for exchange in self.config['exchange_list']:
             listed_stocks = self.rest_api.request_get_data(self.__get_ticker_url(exchange))
@@ -38,13 +39,16 @@ class CompaniesService:
             self.log.info(f'Number of tickers to be delisted: {delisted_tickers_total}')
             self.companies_dao.delete_delisted(delisted_tickers)
 
+    def update_stocks(self):
+        return self.companies_dao.find_outdated_stocks(
+            self.config["rest"]["fundamental_data_api"]["requests_per_minute"])
+
     def __get_ticker_url(self, exchange) -> str:
         return str(self.config['rest']['ticker_api']['url']).replace('$exchange', exchange).replace('$key',
                                                                                                     self.config['rest'][
                                                                                                         'ticker_api'][
                                                                                                         'key'])
 
-    def update_stocks(self):
-        stock_data = self.rest_api.request_get_data(
-            f'{self.config["rest"]["fundamental_data_api"]["url"]}{self.config["exchange_list"][0]}'
-            f'?api_token={self.config["rest"]["ticker_api"]["key"]}')
+    def __build_stocks_data_url(self, ticker):
+        return str(self.config["rest"]["fundamental_data_api"]["url"]).replace('$function', 'OVERVIEW').replace(
+            '$symbol', ticker).replace('$key', self.config["rest"]["fundamental_data_api"]["key"])
