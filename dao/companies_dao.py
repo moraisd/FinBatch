@@ -2,7 +2,7 @@ import pymongo
 from pymongo import UpdateOne
 from pymongo.collection import Collection
 
-from util.constants import symbol_exists_filter, return_tickers_only
+from util.constants import return_tickers_only
 
 
 class CompaniesDao:
@@ -24,18 +24,16 @@ class CompaniesDao:
 
     def find_all_tickers(self) -> set:
         return {field.get('Symbol') for field in
-                self.companies.find(symbol_exists_filter, return_tickers_only)}
+                self.companies.find(projection=return_tickers_only)}
 
     def delete_delisted(self, delisted_tickers: set) -> None:
         self.companies.delete_many({'Symbol': {'$in': list(delisted_tickers)}})
 
     def update_stocks(self, stocks_data: list):
         return self.companies.bulk_write(
-            [UpdateOne(stock['Symbol'], stock) for stock in stocks_data]
+            [UpdateOne({'Symbol': stock['Symbol']}, stock) for stock in stocks_data]
         )
 
-    def bulk_write(self, operations: list):
-        return self.companies.bulk_write(operations)
-
     def find_outdated_stocks(self, limit):
-        return self.companies.find().sort('lastUpdated', pymongo.DESCENDING).limit(limit)
+        return {
+            self.companies.find(projection=return_tickers_only).sort('lastUpdated', pymongo.DESCENDING).limit(limit)}
