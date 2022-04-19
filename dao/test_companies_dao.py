@@ -14,26 +14,6 @@ class TestCompaniesDao(TestCase):
                               {'Symbol': 'AMZN', 'Price': '12'}]
         self.ticker_set = {'AAPL', 'MSFT', 'AMZN'}
 
-    def test_insert_one(self):
-        self.companies_dao.insert_one(self.data)
-
-        collection = self.mock_companies_collection
-        collection.insert_one.assert_called_once_with(self.data)
-
-    def test_update_and_replacing(self):
-        self.companies_dao.update_one(self.ticker, self.data)
-
-        self.mock_companies_collection.update_one.assert_called_once_with({'Symbol': self.ticker},
-                                                                          {"$set": self.data})
-
-    def test_find_one(self):
-        self.mock_companies_collection.find_one.return_value = self.data
-
-        result = self.companies_dao.find_one(self.ticker)
-
-        self.mock_companies_collection.find_one.assert_called_once_with({'Symbol': self.ticker})
-        self.assertDictEqual(result, self.data)
-
     def test_find_all_tickers(self):
         self.mock_companies_collection.find.return_value = self.sample_stocks
 
@@ -50,7 +30,7 @@ class TestCompaniesDao(TestCase):
             {'Symbol': {'$in': [ticker for ticker in self.ticker_set]}})
 
     def test_update_stocks(self):
-        self.companies_dao.update_stocks(self.sample_stocks)
+        self.companies_dao.prepare_update_one(self.sample_stocks)
 
         from pymongo import UpdateOne
         self.mock_companies_collection.bulk_write.assert_called_once_with(

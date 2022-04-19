@@ -1,3 +1,4 @@
+import datetime
 import logging
 
 from api.restapi import RestApi
@@ -40,8 +41,24 @@ class CompaniesService:
             self.companies_dao.delete_delisted(delisted_tickers)
 
     def update_stocks(self):
-        return self.companies_dao.find_outdated_stocks(
+        outdated_stocks_tickers = self.companies_dao.find_outdated_stocks(
             self.config["rest"]["fundamental_data_api"]["requests_per_minute"])
+
+        self.log.info(f'Updating the following stock data: {outdated_stocks_tickers}')
+
+        self.companies_dao.bulk_write(self.__retrieve_stocks_data(outdated_stocks_tickers))
+
+    def __retrieve_stocks_data(self, outdated_stocks_tickers):
+        stocks = []
+        for ticker in outdated_stocks_tickers:
+            stock: dict = self.rest_api.request_get_data(self.__build_stocks_data_url(ticker)).json()
+            if stock.get('Symbol'):
+                stock['LastUpdated'] = datetime.datetime.utcnow()
+                stocks.append(self.companies_dao.prepare_update_one(ticker, stock))
+            else:
+                stocks.append(self.companies_dao.prepare_update_one(ticker, {'blacklisted': True}))
+                # TODO Create job to remove brand new stocks from blacklist after first data retrieval
+        return stocks
 
     def __get_ticker_url(self, exchange) -> str:
         return str(self.config['rest']['ticker_api']['url']).replace('$exchange', exchange).replace('$key',

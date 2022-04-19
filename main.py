@@ -5,10 +5,10 @@ from singletons.app_singletons import companies_service
 if __name__ == '__main__':
     log = logging.getLogger(__name__)
 
-    log.info("Starting ticker update service")
+    log.info("Updating tickers")
     companies_service.update_tickers()
-    log.info("Finished ticker update service")
+    log.info("Finished updating tickers")
 
-    # logging.info("Starting fetching stock data")
-    # companies_service.update_stocks()
-    # logging.info("Finished fetching stock data")
+    log.info("Updating stock data")
+    companies_service.update_stocks()
+    log.info("Finished updating stock data")

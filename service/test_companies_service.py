@@ -1,3 +1,4 @@
+import datetime
 import json
 import os
 from unittest import TestCase
@@ -10,34 +11,40 @@ from singletons.config_singletons import ROOT_DIR
 class CompaniesServiceTest(TestCase):
 
     def setUp(self) -> None:
-        self.companies_service = CompaniesService(MagicMock(), Mock(), Mock(), Mock())
+        self.companies_service = CompaniesService(MagicMock(spec=dict), Mock(), Mock(), Mock())
+        self.rest_ticker_data = {'AAPL', 'KO', 'ALV', 'OAS', 'TSN'}
         super().setUp()
 
     def test_update_tickers(self):
-        rest_ticker_data = {'AAPL', 'MSFT', 'AMZN', 'FB', 'V', 'VALE3'}
-        db_data = {'AAPL', 'MSFT', 'AMZN', 'ABCD'}
+        db_data = {'AAPL', 'KO', 'AMZN', 'ABCD'}
 
         self.companies_service.config.__getitem__.side_effect = [['any'], {'ticker_api': {'url': 'any'}},
                                                                  {'ticker_api': {'key': 'any'}}]
-        self.companies_service.csv_reader.retrieve_tickers.return_value = rest_ticker_data
+        self.companies_service.csv_reader.retrieve_tickers.return_value = self.rest_ticker_data
         self.companies_service.companies_dao.find_all_tickers.return_value = db_data
 
         self.companies_service.update_tickers()
 
         companies_dao = self.companies_service.companies_dao
 
-        companies_dao.insert_tickers.assert_called_once_with({'V', 'VALE3', 'FB'})
-        companies_dao.delete_delisted.assert_called_once_with({'ABCD'})
+        companies_dao.insert_tickers.assert_called_once_with({'ALV', 'OAS', 'TSN'})
+        companies_dao.delete_delisted.assert_called_once_with({'AMZN', 'ABCD'})
 
     def test_update_stocks(self):
         with open(os.path.join(ROOT_DIR, os.path.dirname(__file__), 'sample_stock_json_data.json'), 'r') as json_file:
             json_data = json.load(json_file)
-            self.companies_service.companies_dao.find_outdated_stocks.return_value = json_data
+            self.companies_service.companies_dao.find_outdated_stocks.return_value = self.rest_ticker_data
+            response = Mock()
+            self.companies_service.rest_api.request_get_data.return_value = response
+            response.json.return_value = json_data
+            self.companies_service.config.__getitem__.side_effect = [
+                {'fundamental_data_api': {'requests_per_minute': 'any'}}, {'fundamental_data_api': {'url': 'any'}},
+                {'fundamental_data_api': {'key': 'any'}}]
 
-            # self.companies_service.rest_api.request_get_data.side_effect =
+            self.companies_service.update_stocks()
 
-            [stock for stock in json_data]
+            now = datetime.datetime.utcnow()
+            for stock in json_data:
+                stock['LastUpdated'] = now
 
-            result = self.companies_service.update_stocks()
-
-            self.assertListEqual(result, json_data)
+            self.companies_service.companies_dao.prepare_update_one.called_once_with(json_data)
