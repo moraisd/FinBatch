@@ -36,9 +36,13 @@ class CompaniesServiceTest(TestCase):
             self.companies_service.companies_dao.find_outdated_stocks.return_value = self.rest_ticker_data
             response = Mock()
             self.companies_service.rest_api.request_get_data.return_value = response
-            response.json.return_value = json_data
+            response.json.side_effect = json_data
             self.companies_service.config.__getitem__.side_effect = [
-                {'fundamental_data_api': {'requests_per_minute': 'any'}}, {'fundamental_data_api': {'url': 'any'}},
+                {'fundamental_data_api': {'requests_per_minute': 5}}, {'fundamental_data_api': {'url': 'any'}},
+                {'fundamental_data_api': {'key': 'any'}}, {'fundamental_data_api': {'url': 'any'}},
+                {'fundamental_data_api': {'key': 'any'}}, {'fundamental_data_api': {'url': 'any'}},
+                {'fundamental_data_api': {'key': 'any'}}, {'fundamental_data_api': {'url': 'any'}},
+                {'fundamental_data_api': {'key': 'any'}}, {'fundamental_data_api': {'url': 'any'}},
                 {'fundamental_data_api': {'key': 'any'}}]
 
             self.companies_service.update_stocks()
@@ -47,4 +51,5 @@ class CompaniesServiceTest(TestCase):
             for stock in json_data:
                 stock['LastUpdated'] = now
 
-            self.companies_service.companies_dao.prepare_update_one.called_once_with(json_data)
+            self.companies_service.companies_dao.find_outdated_stocks.called_once_with(5)
+            # self.companies_service.companies_dao.prepare_update_one.called_once_with(json_data)
