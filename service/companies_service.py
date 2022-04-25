@@ -19,7 +19,7 @@ class CompaniesService:
         super().__init__()
 
     def update_tickers(self):
-
+        self.log.info("Updating tickers")
         ticker_set = set()
         for exchange in self.config['exchange_list']:
             listed_stocks = self.rest_api.request_get_data(self.__get_ticker_url(exchange))
@@ -39,6 +39,7 @@ class CompaniesService:
         if delisted_tickers_total:
             self.log.info(f'Number of tickers to be delisted: {delisted_tickers_total}')
             self.companies_dao.delete_delisted(delisted_tickers)
+        self.log.info("Finished updating tickers")
 
     def update_stocks(self):
         outdated_stocks_tickers = self.companies_dao.find_outdated_stocks(
@@ -50,6 +51,7 @@ class CompaniesService:
 
     def __retrieve_stocks_data(self, outdated_stocks_tickers):
         stocks = []
+        # TODO: Implement concurrency on these requests
         for ticker in outdated_stocks_tickers:
             stock: dict = self.rest_api.request_get_data(self.__build_stocks_data_url(ticker)).json()
             if stock.get('Symbol'):

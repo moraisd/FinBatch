@@ -26,6 +26,7 @@ class CompaniesDao:
     def prepare_update_one(self, ticker, data) -> UpdateOne:
         return UpdateOne({'Symbol': ticker}, {"$set": data})
 
+    # TODO: Run this once per program execution, store and update locally to avoid many IO op
     def find_outdated_stocks(self, limit):
         return {stock['Symbol'] for stock in
                 self.companies.find({'blacklisted': {'$exists': False}}, return_tickers_only).sort(
