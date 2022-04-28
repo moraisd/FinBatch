@@ -58,6 +58,7 @@ class CompaniesService:
                 stock['LastUpdated'] = datetime.datetime.utcnow()
                 stocks.append(self.companies_dao.prepare_update_one(ticker, stock))
             else:
+                self.log.debug(stock)
                 stocks.append(self.companies_dao.prepare_update_one(ticker, {'blacklisted': True}))
                 # TODO Create job to remove brand new stocks from blacklist after financial data are available
         return stocks
