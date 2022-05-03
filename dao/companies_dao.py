@@ -34,3 +34,9 @@ class CompaniesDao:
 
     def bulk_write(self, operations: list):
         return self.companies.bulk_write(operations)
+
+    def retrieve_sectors(self) -> list:
+        return self.companies.distinct('Sector')
+
+    def find_by(self, args):
+        return self.companies.find(args)

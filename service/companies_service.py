@@ -1,16 +1,15 @@
-import datetime
 import logging
 
-from api.restapi import RestApi
 from dao.companies_dao import CompaniesDao
+from processor.stock_processor import process_stock
+from rest.restapi import RestApi
 from service.eod_csv_file_reader import EodCsvFileReader
 
 
 class CompaniesService:
 
-    def __init__(self, config: dict, companies_dao: CompaniesDao,
-                 csv_reader: EodCsvFileReader = EodCsvFileReader(),
-                 rest_api: RestApi = RestApi()) -> None:
+    def __init__(self, config: dict, companies_dao: CompaniesDao, rest_api: RestApi,
+                 csv_reader: EodCsvFileReader = EodCsvFileReader()) -> None:
         self.companies_dao = companies_dao
         self.csv_reader = csv_reader
         self.rest_api = rest_api
@@ -39,6 +38,7 @@ class CompaniesService:
         if delisted_tickers_total:
             self.log.info(f'Number of tickers to be delisted: {delisted_tickers_total}')
             self.companies_dao.delete_delisted(delisted_tickers)
+
         self.log.info("Finished updating tickers")
 
     def update_stocks(self):
@@ -53,12 +53,13 @@ class CompaniesService:
         stocks = []
         # TODO: Implement concurrency on these requests
         for ticker in outdated_stocks_tickers:
-            stock: dict = self.rest_api.request_get_data(self.__build_stocks_data_url(ticker)).json()
+            stock = self.rest_api.request_get_data(self.__build_stocks_data_url(ticker)).json()
             if stock.get('Symbol'):
-                stock['LastUpdated'] = datetime.datetime.utcnow()
+                process_stock(stock)
                 stocks.append(self.companies_dao.prepare_update_one(ticker, stock))
             else:
                 self.log.debug(stock)
+                self.log.info(f'Blacklisting {ticker}: No data found')
                 stocks.append(self.companies_dao.prepare_update_one(ticker, {'blacklisted': True}))
                 # TODO Create job to remove brand new stocks from blacklist after financial data are available
         return stocks

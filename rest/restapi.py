@@ -8,4 +8,5 @@ class RestApi:
         print(url)
         headers = {'Accept': '*/*'}
 
+        # TODO Implement timeout feature
         return requests.get(url, headers=headers)

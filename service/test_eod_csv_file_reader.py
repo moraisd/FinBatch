@@ -5,8 +5,8 @@ from service.eod_csv_file_reader import EodCsvFileReader
 from singletons.config_singletons import ROOT_DIR
 
 
-class TestCsvFileReader(TestCase):
-    ticker_set = {'AA', 'AACIW', 'AADI', 'AACI', 'AACIU', 'A', 'AAC'}
+class TestEodCsvFileReader(TestCase):
+    ticker_set = {'AA', 'AACIW', 'AADI', 'AACI', 'AACIU', 'A', 'AAC', 'AA-CG'}
 
     def setUp(self) -> None:
         self.csv_file_reader = EodCsvFileReader()
