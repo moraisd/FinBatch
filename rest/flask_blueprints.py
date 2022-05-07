@@ -1,3 +1,5 @@
+import pprint
+
 from flask import Blueprint, request
 
 from singletons.app_singletons import companies_dao
@@ -5,14 +7,19 @@ from singletons.app_singletons import companies_dao
 bp = Blueprint('bp', __name__)
 
 
-@bp.route('/sectors')
-def sectors():
-    return companies_dao.retrieve_sectors().__str__()
+@bp.route('/params')
+def params():
+    return {'Sector': (companies_dao.retrieve_sectors()),
+            'MarketCapLowerThan': 'Numeric',
+            'MarketCapHigherThan': 'Numeric',
+            'OrderBy': ['PERatio', 'EVToEBITDA']}
 
 
-@bp.route('/screener')
+@bp.route('/screener', methods=['POST'])
 def screener():
-    if len(request.args) > 0:
-        return [data for data in companies_dao.find_by(request.args.to_dict())].__str__()
+    if len(request.form) > 0:
+        args = request.form.to_dict()
 
-    return 'Please include "sector" and "metric" keys in your request'
+        return pprint.pformat([data for data in companies_dao.find_by(args)])
+
+    return params()

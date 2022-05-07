@@ -26,7 +26,8 @@ class CompaniesDao:
     def prepare_update_one(self, ticker, data) -> UpdateOne:
         return UpdateOne({'Symbol': ticker}, {"$set": data})
 
-    # TODO: Run this once per program execution, store and update locally to avoid many IO op
+    # TODO: Run this once per program execution,
+    #  store and update locally to avoid many IO op. Update on DB on a timely basis
     def find_outdated_stocks(self, limit):
         return {stock['Symbol'] for stock in
                 self.companies.find({'blacklisted': {'$exists': False}}, return_tickers_only).sort(
@@ -39,4 +40,4 @@ class CompaniesDao:
         return self.companies.distinct('Sector')
 
     def find_by(self, args):
-        return self.companies.find(args)
+        return self.companies.find({'Sector': args['Sector']}).sort(args['OrderBy'], pymongo.ASCENDING)
