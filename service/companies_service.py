@@ -21,7 +21,7 @@ class CompaniesService:
         self.log.info("Updating tickers")
         ticker_set = set()
         for exchange in self.config['exchange_list']:
-            listed_stocks = self.rest_api.request_get_data(self.__get_ticker_url(exchange))
+            listed_stocks = self.rest_api.request_get_data(self.__build_ticker_url(exchange))
             ticker_set |= self.csv_reader.retrieve_tickers(listed_stocks.text)
 
         database_ticker_set = self.companies_dao.find_all_tickers()
@@ -61,15 +61,16 @@ class CompaniesService:
                 self.log.debug(stock)
                 self.log.info(f'Blacklisting {ticker}: No data found')
                 stocks.append(self.companies_dao.prepare_update_one(ticker, {'blacklisted': True}))
-                # TODO Create job to remove brand new stocks from blacklist after financial data are available
+                # TODO Create job to remove brand-new stocks from blacklist after financial data are available
         return stocks
 
-    def __get_ticker_url(self, exchange) -> str:
-        return str(self.config['rest']['ticker_api']['url']).replace('$exchange', exchange).replace('$key',
-                                                                                                    self.config['rest'][
-                                                                                                        'ticker_api'][
-                                                                                                        'key'])
+    def __build_ticker_url(self, exchange) -> str:
+        return str((self.config['rest']['ticker_api']['url'])
+                   .replace('$exchange', exchange)
+                   .replace('$key', self.config['rest']['ticker_api']['key']))
 
     def __build_stocks_data_url(self, ticker):
-        return str(self.config["rest"]["fundamental_data_api"]["url"]).replace('$function', 'OVERVIEW').replace(
-            '$symbol', ticker).replace('$key', self.config["rest"]["fundamental_data_api"]["key"])
+        return str((self.config["rest"]["fundamental_data_api"]["url"])
+                   .replace('$function', 'OVERVIEW')
+                   .replace('$symbol', ticker)
+                   .replace('$key', self.config["rest"]["fundamental_data_api"]["key"]))

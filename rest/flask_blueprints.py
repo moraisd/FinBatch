@@ -9,17 +9,17 @@ bp = Blueprint('bp', __name__)
 
 @bp.route('/params')
 def params():
-    return {'Sector': (companies_dao.retrieve_sectors()),
-            'MarketCapLowerThan': 'Numeric',
-            'MarketCapHigherThan': 'Numeric',
-            'OrderBy': ['PERatio', 'EVToEBITDA']}
+    sectors_and_industries = companies_dao.retrieve_sectors_and_industries()
+    return {'MarketCapLowerThan(Optional)': 'Numeric',
+            'MarketCapHigherThan(Optional)': 'Numeric',
+            'OrderBy': ['PERatio', 'EVToEBITDA'],
+            'Sector:[Industries]': sectors_and_industries}
 
 
-@bp.route('/screener', methods=['POST'])
+@bp.route('/screener')
 def screener():
-    if len(request.form) > 0:
-        args = request.form.to_dict()
-
+    args = request.args.to_dict()
+    if len(args) > 0 and (args['Sector'] or args['Industry']) and args['OrderBy']:
         return pprint.pformat([data for data in companies_dao.find_by(args)])
 
     return params()

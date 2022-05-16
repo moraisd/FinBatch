@@ -31,7 +31,8 @@ class CompaniesServiceTest(TestCase):
         companies_dao.delete_delisted.assert_called_once_with({'AMZN', 'ABCD'})
 
     def test_update_stocks(self):
-        with open(os.path.join(ROOT_DIR, os.path.dirname(__file__), 'sample_stock_json_data.json'), 'r') as json_file:
+        with open(os.path.join(ROOT_DIR, os.path.dirname(__file__), '../service/sample_stock_json_data.json'),
+                  'r') as json_file:
             json_data = json.load(json_file)
             self.companies_service.companies_dao.find_outdated_stocks.return_value = self.rest_ticker_data
             response = Mock()

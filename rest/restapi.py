@@ -1,11 +1,17 @@
+import logging
+
 import requests
 from requests import Response
 
 
 class RestApi:
 
+    def __init__(self) -> None:
+        self.log = logging.getLogger(__name__)
+        super().__init__()
+
     def request_get_data(self, url) -> Response:
-        print(url)
+        self.log.info(url)
         headers = {'Accept': '*/*'}
 
         # TODO Implement timeout feature

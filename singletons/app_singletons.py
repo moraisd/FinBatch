@@ -2,7 +2,7 @@ from dao.companies_dao import CompaniesDao
 from db.mongo_db import MongoDb
 from rest.restapi import RestApi
 from service.companies_service import CompaniesService
-from service.jobs_aps import JobsAPS
+from service.jobs_manager import JobManager
 from singletons.config_singletons import config
 
 database = MongoDb(config).get_database(config['db']['database'])
@@ -13,4 +13,4 @@ rest_api = RestApi()
 
 companies_service = CompaniesService(config, companies_dao, rest_api)
 
-jobs_scheduler = JobsAPS(config, companies_service)
+jobs_scheduler = JobManager(config, companies_service)
