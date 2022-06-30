@@ -33,15 +33,5 @@ class CompaniesDao:
                 self.companies.find({'blacklisted': {'$exists': False}}, return_tickers_only).sort(
                     'LastUpdated', pymongo.ASCENDING).limit(limit)}
 
-    def retrieve_sectors_and_industries(self) -> list:
-        return [{stock['_id']['Sector']: stock['Industry']} for stock in self.companies.aggregate(
-            [{'$group': {"_id": {'Sector': "$Sector"}, 'Industry': {"$addToSet": "$Industry"}}}]) if
-                stock['Industry']]
-
     def bulk_write(self, operations: list):
         return self.companies.bulk_write(operations)
-
-    def find_by(self, args):
-        return self.companies.find(
-            {'Sector': args.get('Sector'), 'Industry': args.get('Industry'),
-             args['OrderBy']: {'$exists': True}}).sort(args['OrderBy'], pymongo.ASCENDING)

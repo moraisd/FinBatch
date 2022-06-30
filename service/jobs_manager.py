@@ -34,10 +34,11 @@ class JobManager:
             self._executions_counter = 0
 
     def __max_executions_per_day(self):
-        return (self._config['rest']['fundamental_data_api']['requests_per_day'] /
-                self._config['rest']['fundamental_data_api']['requests_per_minute'])
+        fundamental_data_api = self._config['rest']['fundamental_data_api']
+        return fundamental_data_api['requests_per_day'] / fundamental_data_api['requests_per_minute']
 
-    def __next_day(self):
+    @staticmethod
+    def __next_day():
         return datetime.datetime.now() + datetime.timedelta(days=1)
 
     def run_jobs(self):
