@@ -1,7 +1,7 @@
 import datetime
 
 from apscheduler.events import EVENT_JOB_EXECUTED
-from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 
 
@@ -11,7 +11,7 @@ class JobManager:
         self._config = config
         self._companies_service = companies_service
         self._executions_counter = 0
-        self._sched = BackgroundScheduler()
+        self._sched = BlockingScheduler()
 
     def run_and_schedule_ticker_job(self):
         self._companies_service.update_tickers()
