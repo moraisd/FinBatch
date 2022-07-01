@@ -34,7 +34,7 @@ class CompaniesServiceTest(TestCase):
         with open(os.path.join(ROOT_DIR, os.path.dirname(__file__), '../service/sample_stock_json_data.json'),
                   'r') as json_file:
             json_data = json.load(json_file)
-            self.companies_service.companies_dao.find_outdated_stocks.return_value = self.rest_ticker_data
+            self.companies_service.companies_dao.find_most_outdated_stocks.return_value = self.rest_ticker_data
             response = Mock()
             self.companies_service.rest_api.request_get_data.return_value = response
             response.json.side_effect = json_data
@@ -52,5 +52,5 @@ class CompaniesServiceTest(TestCase):
             for stock in json_data:
                 stock['LastUpdated'] = now
 
-            self.companies_service.companies_dao.find_outdated_stocks.called_once_with(5)
+            self.companies_service.companies_dao.find_most_outdated_stocks.called_once_with(5)
             # self.companies_service.companies_dao.prepare_update_one.called_once_with(json_data)

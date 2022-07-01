@@ -12,7 +12,7 @@ class TestEodCsvFileReader(TestCase):
         self.csv_file_reader = EodCsvFileReader()
         super().setUp()
 
-    def test_read_stock_exchange_tickers_stocks(self):
+    def test_retrieve_stocks_only(self):
         with open(os.path.join(ROOT_DIR, os.path.dirname(__file__), '../service/sample_stock_csv_data.csv'), 'r',
                   newline='\r') as file:  # do not split newlines '\n' to simulate REST data
             data = self.csv_file_reader.retrieve_tickers(file.readlines()[0])

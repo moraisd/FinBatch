@@ -42,7 +42,7 @@ class CompaniesService:
         self.log.info("Finished updating tickers")
 
     def update_stocks(self):
-        outdated_stocks_tickers = self.companies_dao.find_outdated_stocks(
+        outdated_stocks_tickers = self.companies_dao.find_most_outdated_stocks(
             self.config["rest"]["fundamental_data_api"]["requests_per_minute"])
 
         self.log.info(f'Updating the following stock data: {outdated_stocks_tickers}')

@@ -1,6 +1,8 @@
 from unittest import TestCase
 from unittest.mock import MagicMock
 
+from pymongo import UpdateOne
+
 from dao.companies_dao import CompaniesDao
 
 
@@ -28,7 +30,7 @@ class TestCompaniesDao(TestCase):
 
         self.mock_companies_collection.insert_many.assert_called_once()
 
-        args: list = self.mock_companies_collection.insert_many.call_args.args[0]
+        args = self.mock_companies_collection.insert_many.call_args.args[0]
         self.assertIs(len(args), 3)
         self.assertIs(type(args), list)
         self.assertTrue('Symbol' and 'LastUpdated' in args[0] and args[1] and args[2])
@@ -45,8 +47,8 @@ class TestCompaniesDao(TestCase):
 
         self.mock_companies_collection.bulk_write.assert_called_once_with(operations)
 
-    def test_find_outdated_stocks(self):
-        self.companies_dao.find_outdated_stocks(10)
+    def test_find_most_outdated_stocks(self):
+        self.companies_dao.find_most_outdated_stocks(10)
 
         find_method = self.mock_companies_collection.find
         find_method.assert_called_once()
@@ -57,3 +59,11 @@ class TestCompaniesDao(TestCase):
 
         limit_method = sort_method.return_value.limit
         limit_method.assert_called_once_with(10)
+
+    def test_prepare_update_one(self):
+        stock_data = {
+            'MarketCapilalization': 12345
+        }
+
+        result = self.companies_dao.prepare_update_one(self.ticker, stock_data)
+        self.assertEqual(result, UpdateOne({'Symbol': self.ticker}, {"$set": stock_data}))

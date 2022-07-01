@@ -28,7 +28,7 @@ class CompaniesDao:
 
     # TODO: Run this once per program execution,
     #  store and update locally to avoid many IO op. Update on DB on a timely basis
-    def find_outdated_stocks(self, limit):
+    def find_most_outdated_stocks(self, limit):
         return {stock['Symbol'] for stock in
                 self.companies.find({'blacklisted': {'$exists': False}}, return_tickers_only).sort(
                     'LastUpdated', pymongo.ASCENDING).limit(limit)}
