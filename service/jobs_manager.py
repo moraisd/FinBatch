@@ -21,24 +21,24 @@ class JobManager:
                             IntervalTrigger(minutes=1), id='update_stock')
 
     def add_listeners(self):
-        self._sched.add_listener(self.__schedule_listener, EVENT_JOB_EXECUTED)
+        self._sched.add_listener(self._schedule_listener, EVENT_JOB_EXECUTED)
 
-    def __schedule_listener(self, event):
+    def _schedule_listener(self, event):
         # TODO Implement preserving job execution counter between Screener executions
 
         if event.job_id == 'update_stock':
             self._executions_counter += 1
-            if self._executions_counter == self.__max_executions_per_day():
+            if self._executions_counter == self._max_executions_per_day():
                 job = self._sched.get_job(event.job_id)
-                job.reschedule(IntervalTrigger(minutes=1, start_date=self.__next_day()))
+                job.reschedule(IntervalTrigger(minutes=1, start_date=self._next_day()))
                 self._executions_counter = 0
 
-    def __max_executions_per_day(self):
+    def _max_executions_per_day(self):
         fundamental_data_api = self._config['rest']['fundamental_data_api']
         return fundamental_data_api['requests_per_day'] / fundamental_data_api['requests_per_minute']
 
     @staticmethod
-    def __next_day():
+    def _next_day():
         return dt.datetime.utcnow() + dt.timedelta(days=1)
 
     def run_jobs(self):

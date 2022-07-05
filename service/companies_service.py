@@ -21,7 +21,7 @@ class CompaniesService:
         self.log.info("Updating tickers")
         ticker_set = set()
         for exchange in self.config['exchange_list']:
-            listed_stocks = self.rest_api.request_get_data(self.__build_ticker_url(exchange))
+            listed_stocks = self.rest_api.request_get_data(self._build_ticker_url(exchange))
             ticker_set |= self.csv_reader.retrieve_tickers(listed_stocks.text)
 
         database_ticker_set = self.companies_dao.find_all_tickers()
@@ -46,14 +46,14 @@ class CompaniesService:
             self.config["rest"]["fundamental_data_api"]["requests_per_minute"])
 
         self.log.info(f'Updating the following stock data: {outdated_stocks_tickers}')
-        self.companies_dao.bulk_write(self.__retrieve_stocks_data(outdated_stocks_tickers))
+        self.companies_dao.bulk_write(self._retrieve_stocks_data(outdated_stocks_tickers))
         self.log.info(f'Finished updating {outdated_stocks_tickers}')
 
-    def __retrieve_stocks_data(self, outdated_stocks_tickers):
+    def _retrieve_stocks_data(self, outdated_stocks_tickers):
         stocks = []
         # TODO: Implement concurrency on these requests
         for ticker in outdated_stocks_tickers:
-            stock = self.rest_api.request_get_data(self.__build_stocks_data_url(ticker)).json()
+            stock = self.rest_api.request_get_data(self._build_stocks_data_url(ticker)).json()
             if stock.get('Symbol'):
                 process_stock(stock)
                 stocks.append(self.companies_dao.prepare_update_one(ticker, stock))
@@ -64,12 +64,12 @@ class CompaniesService:
                 # TODO Create job to remove brand-new stocks from blacklist after financial data are available
         return stocks
 
-    def __build_ticker_url(self, exchange) -> str:
+    def _build_ticker_url(self, exchange) -> str:
         return str((self.config['rest']['ticker_api']['url'])
                    .replace('$exchange', exchange)
                    .replace('$key', self.config['rest']['ticker_api']['key']))
 
-    def __build_stocks_data_url(self, ticker):
+    def _build_stocks_data_url(self, ticker):
         return str((self.config["rest"]["fundamental_data_api"]["url"])
                    .replace('$function', 'OVERVIEW')
                    .replace('$symbol', ticker)
