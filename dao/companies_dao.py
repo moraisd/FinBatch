@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 
 import pymongo
 from pymongo import UpdateOne
@@ -14,7 +14,7 @@ class CompaniesDao:
 
     def insert_tickers(self, tickers: set) -> None:
         self.companies.insert_many(
-            [{'Symbol': ticker, 'LastUpdated': datetime.datetime.utcnow()} for ticker in tickers])
+            [{'Symbol': ticker, 'LastUpdated': dt.datetime.utcnow()} for ticker in tickers])
 
     def find_all_tickers(self) -> set:
         return {stock['Symbol'] for stock in
@@ -23,7 +23,8 @@ class CompaniesDao:
     def delete_delisted(self, delisted_tickers: set) -> None:
         self.companies.delete_many({'Symbol': {'$in': list(delisted_tickers)}})
 
-    def prepare_update_one(self, ticker, data) -> UpdateOne:
+    @staticmethod
+    def prepare_update_one(ticker, data) -> UpdateOne:
         return UpdateOne({'Symbol': ticker}, {"$set": data})
 
     # TODO: Run this once per program execution,

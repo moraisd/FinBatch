@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 
 from apscheduler.events import EVENT_JOB_EXECUTED
 from apscheduler.schedulers.blocking import BlockingScheduler
@@ -14,7 +14,7 @@ class JobManager:
 
     def run_and_schedule_ticker_job(self):
         self._sched.add_job(self._companies_service.update_tickers,
-                            IntervalTrigger(days=1), next_run_time=datetime.datetime.now())
+                            IntervalTrigger(days=1), next_run_time=dt.datetime.now())
 
     def run_and_schedule_update_stocks_job(self):
         self._sched.add_job(self._companies_service.update_stocks,
@@ -39,7 +39,7 @@ class JobManager:
 
     @staticmethod
     def __next_day():
-        return datetime.datetime.now() + datetime.timedelta(days=1)
+        return dt.datetime.utcnow() + dt.timedelta(days=1)
 
     def run_jobs(self):
         self._sched.start()

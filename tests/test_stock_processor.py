@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 from unittest import TestCase
 
 from processor.stock_processor import process_stock
@@ -11,7 +11,7 @@ class TestStockProcessor(TestCase):
 
         expected_result = self.__generate_expected_result(stock)
         self.assertDictEqual(stock, expected_result)
-        self.assertIsInstance(stock['LastUpdated'], datetime.datetime)
+        self.assertIsInstance(stock['LastUpdated'], dt.datetime)
 
     def test_remove_non_numeric(self):
         stock = self.__generate_stock()
@@ -25,7 +25,8 @@ class TestStockProcessor(TestCase):
 
         self.assertDictEqual(stock, expected_result)
 
-    def __generate_stock(self):
+    @staticmethod
+    def __generate_stock():
         stock = {
             'MarketCapitalization': '1234',
             'EBITDA': '4321',
@@ -35,7 +36,8 @@ class TestStockProcessor(TestCase):
         }
         return stock
 
-    def __generate_expected_result(self, stock):
+    @staticmethod
+    def __generate_expected_result(stock):
         return {
             'MarketCapitalization': 1234.0,
             'EBITDA': 4321.0,

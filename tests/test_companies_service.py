@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 import json
 import os
 from unittest import TestCase
@@ -48,7 +48,7 @@ class CompaniesServiceTest(TestCase):
 
             self.companies_service.update_stocks()
 
-            now = datetime.datetime.utcnow()
+            now = dt.datetime.utcnow()
             for stock in json_data:
                 stock['LastUpdated'] = now
 

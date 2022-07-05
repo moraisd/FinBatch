@@ -1,8 +1,8 @@
-import datetime
+import datetime as dt
 
 
 def process_stock(stock: dict):
-    stock['LastUpdated'] = datetime.datetime.utcnow()
+    stock['LastUpdated'] = dt.datetime.utcnow()
 
     __process_float(stock, 'MarketCapitalization')
     __process_float(stock, 'EBITDA')
