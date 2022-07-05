@@ -5,7 +5,6 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 
 
-# TODO Implement proper job exception handling
 class JobManager:
     def __init__(self, config, companies_service):
         self._config = config
@@ -14,24 +13,25 @@ class JobManager:
         self._sched = BlockingScheduler()
 
     def run_and_schedule_ticker_job(self):
-        self._companies_service.update_tickers()
         self._sched.add_job(self._companies_service.update_tickers,
-                            IntervalTrigger(days=1))
+                            IntervalTrigger(days=1), next_run_time=datetime.datetime.now())
 
     def run_and_schedule_update_stocks_job(self):
-        self._companies_service.update_stocks()
-        self._executions_counter += 1
         self._sched.add_job(self._companies_service.update_stocks,
-                            IntervalTrigger(minutes=1))
+                            IntervalTrigger(minutes=1), id='update_stock')
+
+    def add_listeners(self):
         self._sched.add_listener(self.__schedule_listener, EVENT_JOB_EXECUTED)
 
     def __schedule_listener(self, event):
         # TODO Implement preserving job execution counter between Screener executions
-        self._executions_counter += 1
-        if self._executions_counter == self.__max_executions_per_day():
-            job = self._sched.get_job(event.job_id)
-            job.reschedule(IntervalTrigger(minutes=1, start_date=self.__next_day()))
-            self._executions_counter = 0
+
+        if event.job_id == 'update_stock':
+            self._executions_counter += 1
+            if self._executions_counter == self.__max_executions_per_day():
+                job = self._sched.get_job(event.job_id)
+                job.reschedule(IntervalTrigger(minutes=1, start_date=self.__next_day()))
+                self._executions_counter = 0
 
     def __max_executions_per_day(self):
         fundamental_data_api = self._config['rest']['fundamental_data_api']

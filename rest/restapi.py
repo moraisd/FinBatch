@@ -1,7 +1,7 @@
 import logging
 
 import requests
-from requests import Response, Timeout, RequestException
+from requests import Response
 
 
 class RestApi:
@@ -14,11 +14,4 @@ class RestApi:
         self.log.info(url)
         headers = {'Accept': '*/*'}
 
-        try:
-            return requests.get('https://httpstat.us/200?sleep=10000', headers=headers, timeout=6)
-        except Timeout:
-            self.log.warning(f'Connection to {url} timed out:', exc_info=True)
-        except RequestException:
-            self.log.warning(f'Connection to {url} failed:', exc_info=True)
-
-        return Response()
+        return requests.get(url, headers=headers, timeout=6)
