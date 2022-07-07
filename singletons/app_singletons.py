@@ -1,16 +1,10 @@
-from dao.companies_dao import CompaniesDao
-from db.mongo_db import MongoDb
-from rest.restapi import RestApi
+import dao.companies_dao as companies_dao
+import rest.rest_api as rest_api
+import service.eod_csv_file_reader as eod_reader
+from config.config_reader import get_config
 from service.companies_service import CompaniesService
 from service.jobs_manager import JobManager
-from singletons.config_singletons import config
 
-database = MongoDb(config).get_database(config['db']['database'])
+companies_service = CompaniesService(get_config(), companies_dao, rest_api, eod_reader)
 
-companies_dao = CompaniesDao(database['companies'])
-
-rest_api = RestApi()
-
-companies_service = CompaniesService(config, companies_dao, rest_api)
-
-jobs_scheduler = JobManager(config, companies_service)
+jobs_scheduler = JobManager(get_config(), companies_service)

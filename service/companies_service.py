@@ -1,17 +1,13 @@
 import logging
 
-from dao.companies_dao import CompaniesDao
 from processor.stock_processor import process_stock
-from rest.restapi import RestApi
-from service.eod_csv_file_reader import EodCsvFileReader
 
 
 class CompaniesService:
 
-    def __init__(self, config: dict, companies_dao: CompaniesDao, rest_api: RestApi,
-                 csv_reader: EodCsvFileReader = EodCsvFileReader()) -> None:
+    def __init__(self, config: dict, companies_dao, rest_api, reader) -> None:
         self.companies_dao = companies_dao
-        self.csv_reader = csv_reader
+        self.reader = reader
         self.rest_api = rest_api
         self.config = config
         self.log = logging.getLogger(__name__)
@@ -21,8 +17,8 @@ class CompaniesService:
         self.log.info("Updating tickers")
         ticker_set = set()
         for exchange in self.config['exchange_list']:
-            listed_stocks = self.rest_api.request_get_data(self._build_ticker_url(exchange))
-            ticker_set |= self.csv_reader.retrieve_tickers(listed_stocks.text)
+            listed_stocks = self.rest_api.get_data(self._build_ticker_url(exchange))
+            ticker_set |= self.reader.read(listed_stocks.text)
 
         database_ticker_set = self.companies_dao.find_all_tickers()
 
@@ -53,7 +49,7 @@ class CompaniesService:
         stocks = []
         # TODO: Implement concurrency on these requests
         for ticker in outdated_stocks_tickers:
-            stock = self.rest_api.request_get_data(self._build_stocks_data_url(ticker)).json()
+            stock = self.rest_api.get_data(self._build_stocks_data_url(ticker)).json()
             if stock.get('Symbol'):
                 process_stock(stock)
                 stocks.append(self.companies_dao.prepare_update_one(ticker, stock))
