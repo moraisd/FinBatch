@@ -1,56 +1,66 @@
-import datetime as dt
 import json
 import os
 from unittest import TestCase
-from unittest.mock import Mock, MagicMock
+from unittest.mock import patch, MagicMock, call
+
+from pymongo import UpdateOne
 
 from config.config_reader import get_root_dir
-from service.companies_service import CompaniesService
+from service import companies_service
 
 
+@patch('service.companies_service.companies_dao')
+@patch('service.companies_service.rest_api.get_data')
+@patch('service.companies_service.get_config')
 class CompaniesServiceTest(TestCase):
 
     def setUp(self) -> None:
-        self.companies_service = CompaniesService(MagicMock(spec=dict), Mock(), Mock(), Mock())
+        self.companies_service = companies_service
         self.rest_ticker_data = {'AAPL', 'KO', 'ALV', 'OAS', 'TSN'}
         super().setUp()
 
-    def test_update_tickers(self):
+    @patch('service.companies_service.reader')
+    def test_update_tickers(self, reader, get_config, rest_api_get_data, companies_dao):
         db_data = {'AAPL', 'KO', 'AMZN', 'ABCD'}
+        get_config.return_value = {
+            'exchange_list': ['US'],
+            'rest': {'ticker_api': {'url': 'URL with Exchange: $exchange and Key: $key', 'key': 'key_value'}}}
 
-        self.companies_service.config.__getitem__.side_effect = [['any'], {'ticker_api': {'url': 'any'}},
-                                                                 {'ticker_api': {'key': 'any'}}]
-        self.companies_service.reader.read.return_value = self.rest_ticker_data
-        self.companies_service.companies_dao.find_all_tickers.return_value = db_data
+        rest_api_get_data.return_value = MagicMock()
+        rest_api_get_data.return_value.text = 'any_response'
+        reader.read.return_value = self.rest_ticker_data
+        companies_dao.find_all_tickers.return_value = db_data
 
         self.companies_service.update_tickers()
 
-        companies_dao = self.companies_service.companies_dao
-
+        reader.read.assert_called_once_with('any_response')
+        rest_api_get_data.assert_called_once_with('URL with Exchange: US and Key: key_value')
         companies_dao.insert_tickers.assert_called_once_with({'ALV', 'OAS', 'TSN'})
         companies_dao.delete_delisted.assert_called_once_with({'AMZN', 'ABCD'})
 
-    def test_update_stocks(self):
+    @patch('service.companies_service.process_stock')
+    def test_update_stocks(self, process_stock, get_config, rest_api_get_data, companies_dao):
         with open(os.path.join(get_root_dir(), os.path.dirname(__file__), 'sample_stock_json_data.json'),
                   'r') as json_file:
             json_data = json.load(json_file)
-            self.companies_service.companies_dao.find_most_outdated_stocks.return_value = self.rest_ticker_data
-            response = Mock()
-            self.companies_service.rest_api.get_data.return_value = response
-            response.json.side_effect = json_data
-            self.companies_service.config.__getitem__.side_effect = [
-                {'fundamental_data_api': {'requests_per_minute': 5}}, {'fundamental_data_api': {'url': 'any'}},
-                {'fundamental_data_api': {'key': 'any'}}, {'fundamental_data_api': {'url': 'any'}},
-                {'fundamental_data_api': {'key': 'any'}}, {'fundamental_data_api': {'url': 'any'}},
-                {'fundamental_data_api': {'key': 'any'}}, {'fundamental_data_api': {'url': 'any'}},
-                {'fundamental_data_api': {'key': 'any'}}, {'fundamental_data_api': {'url': 'any'}},
-                {'fundamental_data_api': {'key': 'any'}}]
+            companies_dao.find_most_outdated_stocks.return_value = self.rest_ticker_data
+            rest_api_get_data.return_value.json.side_effect = json_data
+            get_config.return_value = {
+                'rest': {
+                    'fundamental_data_api': {'url': 'URL with function: $function, Key: $key and Symbol: $symbol',
+                                             'key': 'key_value',
+                                             'requests_per_minute': '5'}}}
+
+            process_stock.side_effect = json_data
+            update_one_list = [MagicMock(spec=UpdateOne) for _ in json_data]
+            companies_dao.prepare_update_one.side_effect = update_one_list
 
             self.companies_service.update_stocks()
 
-            now = dt.datetime.utcnow()
-            for stock in json_data:
-                stock['LastUpdated'] = now
-
-            self.companies_service.companies_dao.find_most_outdated_stocks.called_once_with(5)
-            # self.companies_service.companies_dao.prepare_update_one.called_once_with(json_data)
+            companies_dao.find_most_outdated_stocks.called_once_with(5)
+            rest_api_get_data.assert_has_calls(
+                [call(f'URL with function: OVERVIEW, Key: key_value and Symbol: {ticker}')
+                 for ticker in self.rest_ticker_data], any_order='True')
+            process_stock.assert_has_calls([call(stock) for stock in json_data], any_order='True')
+            companies_dao.prepare_update_one.called_with([[stock['Symbol'], stock] for stock in json_data])
+            companies_dao.bulk_write.called_once_with(update_one_list)
