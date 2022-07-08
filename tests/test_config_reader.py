@@ -1,14 +1,14 @@
 import os
 from unittest import TestCase
 
-from config.config_reader import ConfigReader
-from singletons.config_singletons import ROOT_DIR
+import config.config_reader as config_reader
 
 
 class TestConfig(TestCase):
 
     def test_read_config(self):
-        config = ConfigReader().read(os.path.join(ROOT_DIR, os.path.dirname(__file__), 'test_config.yaml'))
+        config = config_reader._read_yaml(
+            os.path.join(config_reader.get_root_dir(), os.path.dirname(__file__), 'test_config.yaml'))
 
         self.assertDictEqual(config,
                              {'rest':

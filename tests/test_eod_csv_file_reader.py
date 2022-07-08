@@ -1,14 +1,14 @@
 import os.path
 from unittest import TestCase
 
-from service.eod_csv_file_reader import EodCsvFileReader
-from singletons.config_singletons import ROOT_DIR
+import service.eod_csv_file_reader as eod_reader
+from config.config_reader import get_root_dir
 
 
 class TestEodCsvFileReader(TestCase):
 
     def test_retrieve_stocks_only(self):
-        with open(os.path.join(ROOT_DIR, os.path.dirname(__file__), '../service/sample_stock_csv_data.csv'), 'r',
+        with open(os.path.join(get_root_dir(), os.path.dirname(__file__), 'sample_stock_csv_data.csv'), 'r',
                   newline='\r') as file:  # do not split newlines '\n' to simulate REST data
-            data = EodCsvFileReader().retrieve_tickers(file.readlines()[0])
+            data = eod_reader.read(file.readlines()[0])
             self.assertSetEqual(data, {'AA', 'AACIW', 'AADI', 'AACI', 'AACIU', 'A', 'AAC', 'AA-CG'})
