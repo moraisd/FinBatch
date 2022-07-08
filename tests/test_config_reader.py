@@ -10,10 +10,8 @@ class TestConfig(TestCase):
         config = config_reader._read_yaml(
             os.path.join(config_reader.get_root_dir(), os.path.dirname(__file__), 'test_config.yaml'))
 
-        self.assertDictEqual(config,
-                             {'rest':
-                                  {'base_url': 'https://www.alphavantage.co/query',
-                                   'data_type': 'function',
-                                   'ticker': 'symbol',
-                                   'api_key': 'apikey'
-                                   }})
+        self.assertDictEqual(config, {'rest': {'base_url': 'https://www.alphavantage.co/query',
+                                               'data_type': 'function',
+                                               'ticker': 'symbol',
+                                               'api_key': 'apikey'
+                                               }})
