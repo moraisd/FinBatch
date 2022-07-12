@@ -1,1 +1,1 @@
-return_tickers_only = {'Symbol': True, '_id': False}
+return_symbols_only = {'Symbol': True, '_id': False}
