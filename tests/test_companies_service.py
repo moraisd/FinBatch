@@ -45,13 +45,8 @@ class CompaniesServiceTest(TestCase):
             json_data = json.load(json_file)
             companies_dao.find_most_outdated_stocks.return_value = self.rest_ticker_data
             rest_api_get_data.return_value.json.side_effect = json_data
-            get_config.return_value = {
-                'rest': {
-                    'fundamental_data_api': {'url': 'URL with function: $function, Key: $key and Symbol: $symbol',
-                                             'key': 'key_value',
-                                             'requests_per_minute': '5'}}}
+            self._generate_config(get_config)
 
-            process_stock.side_effect = json_data
             update_one_list = [MagicMock(spec=UpdateOne) for _ in json_data]
             companies_dao.prepare_update_one.side_effect = update_one_list
 
@@ -62,5 +57,34 @@ class CompaniesServiceTest(TestCase):
                 [call(f'URL with function: OVERVIEW, Key: key_value and Symbol: {ticker}')
                  for ticker in self.rest_ticker_data], any_order='True')
             process_stock.assert_has_calls([call(stock) for stock in json_data], any_order='True')
+            self.assertEqual(process_stock.call_count, 5)
             companies_dao.prepare_update_one.called_with([[stock['Symbol'], stock] for stock in json_data])
             companies_dao.bulk_write.called_once_with(update_one_list)
+
+    @patch('service.companies_service.process_stock')
+    def test_blacklist_stocks(self, process_stock, get_config, rest_api_get_data, companies_dao):
+        ticker_list = list(self.rest_ticker_data)
+        companies_dao.find_most_outdated_stocks.return_value = ticker_list
+        one_blacklisted_four_processed = [{'Symbol': ticker} if ticker != 'AAPL' else {} for ticker in ticker_list]
+        rest_api_get_data.return_value.json.side_effect = one_blacklisted_four_processed
+        self._generate_config(get_config)
+
+        update_one_list = [MagicMock(spec=UpdateOne) for _ in self.rest_ticker_data]
+        companies_dao.prepare_update_one.side_effect = update_one_list
+
+        self.companies_service.update_stocks()
+
+        process_stock.assert_has_calls([call(stock) for stock in one_blacklisted_four_processed if stock],
+                                       any_order='True')
+        self.assertEqual(process_stock.call_count, 4)
+        expected_sucessful_processed = [[stock['Symbol'], stock] for stock in one_blacklisted_four_processed if stock]
+        companies_dao.prepare_update_one.called_with(expected_sucessful_processed)
+        companies_dao.prepare_update_one.called_once_with('AAPL', {'blacklisted': True})
+        companies_dao.bulk_write.called_once_with(update_one_list)
+
+    def _generate_config(self, get_config):
+        get_config.return_value = {
+            'rest': {
+                'fundamental_data_api': {'url': 'URL with function: $function, Key: $key and Symbol: $symbol',
+                                         'key': 'key_value',
+                                         'requests_per_minute': '5'}}}

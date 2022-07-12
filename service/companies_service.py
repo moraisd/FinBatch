@@ -39,11 +39,11 @@ def update_stocks():
         get_config()["rest"]["fundamental_data_api"]["requests_per_minute"])
 
     _log.info(f'Updating the following stock data: {outdated_stocks_tickers}')
-    companies_dao.bulk_write(_retrieve_stocks_data(outdated_stocks_tickers))
+    companies_dao.bulk_write(_retrieve_process_stocks(outdated_stocks_tickers))
     _log.info(f'Finished updating {outdated_stocks_tickers}')
 
 
-def _retrieve_stocks_data(outdated_stocks_tickers):
+def _retrieve_process_stocks(outdated_stocks_tickers):
     stocks = []
     # TODO: Implement concurrency on these requests
     for ticker in outdated_stocks_tickers:
