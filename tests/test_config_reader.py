@@ -12,6 +12,6 @@ class TestConfig(TestCase):
 
         self.assertDictEqual(config, {'rest': {'base_url': 'https://www.alphavantage.co/query',
                                                'data_type': 'function',
-                                               'ticker': 'symbol',
+                                               'symbol': 'AAPL',
                                                'api_key': 'apikey'
                                                }})

@@ -8,25 +8,25 @@ import dao.companies_dao as companies_dao
 
 class TestCompaniesDao(TestCase):
     def setUp(self):
-        self.ticker = 'AAPL'
-        self.data = {'Symbol': self.ticker}
+        self.symbol = 'AAPL'
+        self.data = {'Symbol': self.symbol}
         self.companies_dao = companies_dao
         self.sample_stocks = [self.data, {'Symbol': 'MSFT'},
                               {'Symbol': 'AMZN'}]
-        self.ticker_set = {'AAPL', 'MSFT', 'AMZN'}
+        self.symbol_set = {'AAPL', 'MSFT', 'AMZN'}
         self.companies_dao._companies_collection = MagicMock()
 
-    def test_find_all_tickers(self):
+    def test_find_all_symbols(self):
         self.companies_dao._companies_collection.find.return_value = self.sample_stocks
 
-        result = self.companies_dao.find_all_tickers()
+        result = self.companies_dao.find_all_symbols()
 
-        from util.constants import return_tickers_only
-        self.companies_dao._companies_collection.find.assert_called_once_with(projection=return_tickers_only)
-        self.assertSetEqual(result, self.ticker_set)
+        from util.constants import return_symbols_only
+        self.companies_dao._companies_collection.find.assert_called_once_with(projection=return_symbols_only)
+        self.assertSetEqual(result, self.symbol_set)
 
-    def test_insert_tickers(self):
-        self.companies_dao.insert_tickers(self.ticker_set)
+    def test_insert_symbols(self):
+        self.companies_dao.insert_symbols(self.symbol_set)
 
         self.companies_dao._companies_collection.insert_many.assert_called_once()
 
@@ -36,10 +36,10 @@ class TestCompaniesDao(TestCase):
         self.assertTrue('Symbol' and 'LastUpdated' in args[0] and args[1] and args[2])
 
     def test_delete_delisted(self):
-        self.companies_dao.delete_delisted(self.ticker_set)
+        self.companies_dao.delete_delisted(self.symbol_set)
 
         self.companies_dao._companies_collection.delete_many.assert_called_once_with(
-            {'Symbol': {'$in': [ticker for ticker in self.ticker_set]}})
+            {'Symbol': {'$in': [symbol for symbol in self.symbol_set]}})
 
     def test_update_stocks(self):
         operations = MagicMock()
@@ -65,5 +65,5 @@ class TestCompaniesDao(TestCase):
             'MarketCapilalization': 12345
         }
 
-        result = self.companies_dao.prepare_update_one(self.ticker, stock_data)
-        self.assertEqual(result, UpdateOne({'Symbol': self.ticker}, {"$set": stock_data}))
+        result = self.companies_dao.prepare_update_one(self.symbol, stock_data)
+        self.assertEqual(result, UpdateOne({'Symbol': self.symbol}, {"$set": stock_data}))
