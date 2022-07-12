@@ -6,16 +6,16 @@ from unittest.mock import patch, MagicMock, call
 from pymongo import UpdateOne
 
 from config.config_reader import get_root_dir
-from service import companies_service
+from service import stock_service
 
 
 @patch('service.companies_service.companies_dao')
 @patch('service.companies_service.rest_api.get_data')
 @patch('service.companies_service.get_config')
-class CompaniesServiceTest(TestCase):
+class StockServiceTest(TestCase):
 
     def setUp(self) -> None:
-        self.companies_service = companies_service
+        self.stock_service = stock_service
         self.rest_ticker_data = {'AAPL', 'KO', 'ALV', 'OAS', 'TSN'}
         super().setUp()
 
@@ -31,7 +31,7 @@ class CompaniesServiceTest(TestCase):
         reader.read.return_value = self.rest_ticker_data
         companies_dao.find_all_tickers.return_value = db_data
 
-        self.companies_service.update_tickers()
+        self.stock_service.update_tickers()
 
         reader.read.assert_called_once_with('any_response')
         rest_api_get_data.assert_called_once_with('URL with Exchange: US and Key: key_value')
@@ -50,7 +50,7 @@ class CompaniesServiceTest(TestCase):
             update_one_list = [MagicMock(spec=UpdateOne) for _ in json_data]
             companies_dao.prepare_update_one.side_effect = update_one_list
 
-            self.companies_service.update_stocks()
+            self.stock_service.update_stocks()
 
             companies_dao.find_most_outdated_stocks.called_once_with(5)
             rest_api_get_data.assert_has_calls(
@@ -72,7 +72,7 @@ class CompaniesServiceTest(TestCase):
         update_one_list = [MagicMock(spec=UpdateOne) for _ in self.rest_ticker_data]
         companies_dao.prepare_update_one.side_effect = update_one_list
 
-        self.companies_service.update_stocks()
+        self.stock_service.update_stocks()
 
         process_stock.assert_has_calls([call(stock) for stock in one_blacklisted_four_processed if stock],
                                        any_order='True')
@@ -82,7 +82,8 @@ class CompaniesServiceTest(TestCase):
         companies_dao.prepare_update_one.called_once_with('AAPL', {'blacklisted': True})
         companies_dao.bulk_write.called_once_with(update_one_list)
 
-    def _generate_config(self, get_config):
+    @staticmethod
+    def _generate_config(get_config):
         get_config.return_value = {
             'rest': {
                 'fundamental_data_api': {'url': 'URL with function: $function, Key: $key and Symbol: $symbol',

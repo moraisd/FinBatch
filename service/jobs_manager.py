@@ -5,14 +5,14 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 
 from config.config_reader import get_config
-from service.companies_service import update_tickers, update_stocks
+from service.stock_service import update_tickers, update_stocks
 
 _scheduler = BlockingScheduler()
 _executions_counter = 0
 
 
 def run_and_schedule_ticker_job():
-    _scheduler.add_job(update_tickers, IntervalTrigger(days=1), next_run_time=dt.datetime.now())
+    _scheduler.add_job(update_tickers, IntervalTrigger(days=1), next_run_time=dt.datetime.utcnow())
 
 
 def run_and_schedule_update_stocks_job():
