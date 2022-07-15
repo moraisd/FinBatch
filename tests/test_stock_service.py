@@ -12,6 +12,7 @@ from service import stock_service
 @patch('service.stock_service.companies_dao')
 @patch('service.stock_service.rest_api.get_data')
 @patch('service.stock_service.get_config')
+@patch('service.stock_service.process_stock')
 class StockServiceTest(TestCase):
 
     def setUp(self) -> None:
@@ -19,26 +20,6 @@ class StockServiceTest(TestCase):
         self.rest_symbol_data = {'AAPL', 'KO', 'ALV', 'OAS', 'TSN'}
         super().setUp()
 
-    @patch('service.stock_service.reader')
-    def test_update_symbols(self, reader, get_config, rest_api_get_data, companies_dao):
-        db_data = {'AAPL', 'KO', 'AMZN', 'ABCD'}
-        get_config.return_value = {
-            'exchange_list': ['US'],
-            'rest': {'symbol_api': {'url': 'URL with Exchange: $exchange and Key: $key', 'key': 'key_value'}}}
-
-        rest_api_get_data.return_value = MagicMock()
-        rest_api_get_data.return_value.text = 'any_response'
-        reader.read.return_value = self.rest_symbol_data
-        companies_dao.find_all_symbols.return_value = db_data
-
-        self.stock_service.update_symbols()
-
-        reader.read.assert_called_once_with('any_response')
-        rest_api_get_data.assert_called_once_with('URL with Exchange: US and Key: key_value')
-        companies_dao.insert_symbols.assert_called_once_with({'ALV', 'OAS', 'TSN'})
-        companies_dao.delete_delisted.assert_called_once_with({'AMZN', 'ABCD'})
-
-    @patch('service.stock_service.process_stock')
     def test_update_stocks(self, process_stock, get_config, rest_api_get_data, companies_dao):
         with open(os.path.join(get_root_dir(), os.path.dirname(__file__), 'sample_stock_json_data.json'),
                   'r') as json_file:
@@ -61,7 +42,6 @@ class StockServiceTest(TestCase):
             companies_dao.prepare_update_one.called_with([[stock['Symbol'], stock] for stock in json_data])
             companies_dao.bulk_write.called_once_with(update_one_list)
 
-    @patch('service.stock_service.process_stock')
     def test_blacklist_stocks(self, process_stock, get_config, rest_api_get_data, companies_dao):
         symbol_list = list(self.rest_symbol_data)
         companies_dao.find_most_outdated_stocks.return_value = symbol_list

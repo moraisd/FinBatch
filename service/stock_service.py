@@ -4,34 +4,8 @@ from config.config_reader import get_config
 from dao import companies_dao
 from processor.stock_processor import process_stock
 from rest import rest_api
-from service import eod_csv_file_reader as reader
 
 _log = logging.getLogger(__name__)
-
-
-def update_symbols():
-    _log.info("Updating symbols")
-    symbol_set = set()
-    for exchange in get_config()['exchange_list']:
-        listed_stocks = rest_api.get_data(_build_symbol_url(exchange))
-        symbol_set |= reader.read(listed_stocks.text)
-
-    database_symbol_set = companies_dao.find_all_symbols()
-
-    new_symbols = symbol_set - database_symbol_set
-    delisted_symbols = database_symbol_set - symbol_set
-
-    new_symbols_total = len(new_symbols)
-    if new_symbols_total:
-        _log.info(f'Number of symbols to be inserted: {new_symbols_total}')
-        companies_dao.insert_symbols(new_symbols)
-
-    delisted_symbols_total = len(delisted_symbols)
-    if delisted_symbols_total:
-        _log.info(f'Number of symbols to be delisted: {delisted_symbols_total}')
-        companies_dao.delete_delisted(delisted_symbols)
-
-    _log.info("Finished updating symbols")
 
 
 def update_stocks():
