@@ -5,7 +5,8 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 
 from config.config_reader import get_config
-from service.stock_service import update_symbols, update_stocks
+from service.stock_service import update_stocks
+from service.symbol_service import update_symbols
 
 _scheduler = BlockingScheduler()
 _executions_counter = 0
