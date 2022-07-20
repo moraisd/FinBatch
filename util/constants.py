@@ -1,1 +1,1 @@
-return_symbols_only = {'Symbol': True, '_id': False}
+SYMBOLS_ONLY = {'Symbol': True, '_id': False}

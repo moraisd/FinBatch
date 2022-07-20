@@ -5,15 +5,15 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 
 from config.config_reader import get_config
-from service.stock_service import update_stocks
-from service.symbol_service import update_symbols
+from stock.stock_service import update_stocks
+from symbol.symbol_service import update_symbols
 
 _scheduler = BlockingScheduler()
 _executions_counter = 0
 
 
 def run_and_schedule_symbol_job():
-    _scheduler.add_job(update_symbols, IntervalTrigger(days=1), next_run_time=dt.datetime.utcnow())
+    _scheduler.add_job(update_symbols, IntervalTrigger(days=1), next_run_time=dt.datetime.now())
 
 
 def run_and_schedule_update_stocks_job():
@@ -25,14 +25,13 @@ def add_listeners():
 
 
 def _schedule_listener(event):
-    # TODO Implement preserving job execution counter between Screener executions
-    if event.job_id == 'update_stock':
-        global _executions_counter
-        _executions_counter += 1
-        if _executions_counter == _max_executions_per_day():
-            job = _scheduler.get_job(event.job_id)
-            job.reschedule(IntervalTrigger(minutes=1, start_date=_next_day()))
-            _executions_counter = 0
+    # TODO Implement preserving job execution counter between application restarts
+    global _executions_counter
+    _executions_counter += 1
+    if _executions_counter == _max_executions_per_day():
+        job = _scheduler.get_job(event.job_id)
+        job.reschedule(IntervalTrigger(minutes=1, start_date=_next_day()))
+        _executions_counter = 0
 
 
 def _max_executions_per_day():

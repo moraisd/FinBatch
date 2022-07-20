@@ -2,6 +2,7 @@ import logging
 
 from config.config_reader import get_config
 from dao import companies_dao
+from symbol import symbol_api_delegator
 
 _log = logging.getLogger(__name__)
 
@@ -11,7 +12,8 @@ def update_symbols():
     symbol_set = set()
     symbol_apis = get_config()['rest']['symbol_api']
 
-    symbol_set |= {get_symbols.fetch_symbols(api) for api in symbol_apis}
+    for api in symbol_apis:
+        symbol_set |= symbol_api_delegator.get_from(api)
 
     database_symbol_set = companies_dao.find_all_symbols()
 

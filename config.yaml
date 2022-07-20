@@ -6,7 +6,7 @@ rest:
     requests_per_day: 500
   symbol_api:
     eodhistoricaldata:
-      url: 'https://eodhistoricaldata.com/api/exchange-symbol-list/$exchange?api_token=$key'
+      url: 'https://eodhistoricaldata.com/api/exchange-symbol-list/US?api_token=$key'
       key: '6234cff2ba7c31.29252804'
     alphavantage:
       url: 'https://www.alphavantage.co/query?function=LISTING_STATUS&apikey=$key'
@@ -15,5 +15,3 @@ rest:
 db:
   database_url: 'mongodb://localhost:27017/'
   database: mydatabase
-
-exchange_list: [ 'US' ] # Current fundamental data API supports US stocks only
