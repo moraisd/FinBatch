@@ -5,7 +5,7 @@ from pymongo import UpdateOne
 
 import db.mongo_db as mongo_db
 from config.config_reader import get_config
-from util.constants import return_symbols_only
+from util.constants import SYMBOLS_ONLY
 
 _companies_collection = mongo_db.get_database(get_config()['db'])['companies']
 
@@ -17,7 +17,7 @@ def insert_symbols(symbols: set) -> None:
 
 def find_all_symbols() -> set:
     return {stock['Symbol'] for stock in
-            _companies_collection.find(projection=return_symbols_only)}
+            _companies_collection.find(projection=SYMBOLS_ONLY)}
 
 
 def delete_delisted(delisted_symbols: set) -> None:
@@ -32,7 +32,7 @@ def prepare_update_one(symbol, data) -> UpdateOne:
 #  store and update locally to avoid many IO op. Update on DB on a timely basis
 def find_most_outdated_stocks(limit):
     return {stock['Symbol'] for stock in
-            _companies_collection.find({'blacklisted': {'$exists': False}}, return_symbols_only).sort(
+            _companies_collection.find({'blacklisted': {'$exists': False}}, SYMBOLS_ONLY).sort(
                 'LastUpdated', pymongo.ASCENDING).limit(limit)}
 
 

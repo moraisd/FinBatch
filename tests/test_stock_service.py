@@ -6,13 +6,13 @@ from unittest.mock import patch, MagicMock, call
 from pymongo import UpdateOne
 
 from config.config_reader import get_root_dir
-from service import stock_service
+from stock import stock_service
 
 
-@patch('service.stock_service.companies_dao')
-@patch('service.stock_service.rest_api.get_data')
-@patch('service.stock_service.get_config')
-@patch('service.stock_service.process_stock')
+@patch('scheduler.stock_service.companies_dao')
+@patch('scheduler.stock_service.rest_api.get_data')
+@patch('scheduler.stock_service.get_config')
+@patch('scheduler.stock_service.process_stock')
 class StockServiceTest(TestCase):
 
     def setUp(self) -> None:

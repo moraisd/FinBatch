@@ -2,8 +2,8 @@ import logging
 
 from config.config_reader import get_config
 from dao import companies_dao
-from processor.stock_processor import process_stock
 from rest import rest_api
+from stock.stock_processor import process_stock
 
 _log = logging.getLogger(__name__)
 
@@ -30,12 +30,6 @@ def _retrieve_process_stocks(outdated_stocks_symbols):
             _log.info(f'Blacklisting {symbol}: No data found')
             stocks.append(companies_dao.prepare_update_one(symbol, {'blacklisted': True}))
     return stocks
-
-
-def _build_symbol_url(exchange) -> str:
-    return str((get_config()['rest']['symbol_api']['url'])
-               .replace('$exchange', exchange)
-               .replace('$key', get_config()['rest']['symbol_api']['key']))
 
 
 def _build_stocks_data_url(symbol):

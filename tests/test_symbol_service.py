@@ -2,8 +2,8 @@ from unittest import TestCase
 from unittest.mock import patch
 
 
-@patch('service.symbol_service.companies_dao')
-@patch('service.symbol_service.get_config')
+@patch('scheduler.symbol_service.companies_dao')
+@patch('scheduler.symbol_service.get_config')
 class TestSymbolService(TestCase):
 
     def test_update_symbols(self, get_config, companies_dao):
@@ -12,7 +12,7 @@ class TestSymbolService(TestCase):
         get_config.return_value = {'api_1': {'url': 'URL 1 with Key: $key', 'key': 'key_value'},
                                    'api_2': {'url': 'URL 2 with Key: $key', 'key': 'key_value'}}
 
-        get_symbols.fetch_symbols.side_effect = symbol_api_data
+        get_symbols.get_from.side_effect = symbol_api_data
         companies_dao.find_all_symbols.return_value = db_data
 
         self.symbol_service.update_symbols()

@@ -21,8 +21,8 @@ class TestCompaniesDao(TestCase):
 
         result = self.companies_dao.find_all_symbols()
 
-        from util.constants import return_symbols_only
-        self.companies_dao._companies_collection.find.assert_called_once_with(projection=return_symbols_only)
+        from util.constants import SYMBOLS_ONLY
+        self.companies_dao._companies_collection.find.assert_called_once_with(projection=SYMBOLS_ONLY)
         self.assertSetEqual(result, self.symbol_set)
 
     def test_insert_symbols(self):
