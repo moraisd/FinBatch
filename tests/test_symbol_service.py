@@ -1,21 +1,23 @@
 from unittest import TestCase
 from unittest.mock import patch
 
+from symbol import symbol_service
 
-@patch('scheduler.symbol_service.companies_dao')
-@patch('scheduler.symbol_service.get_config')
+
+@patch('symbol.symbol_service.companies_dao')
+@patch('symbol.symbol_service.symbol_api_delegator')
+@patch('symbol.symbol_service.get_config')
 class TestSymbolService(TestCase):
 
-    def test_update_symbols(self, get_config, companies_dao):
-        symbol_api_data = {{'AAPL', 'KO'}, {'ALV', 'OAS', 'TSN'}}
+    def test_update_symbols(self, get_config, symbol_api_delegator, companies_dao):
+        symbol_api_data = [{'AAPL', 'KO'}, {'ALV', 'OAS', 'TSN'}]
         db_data = {'AAPL', 'KO', 'AMZN', 'ABCD'}
-        get_config.return_value = {'api_1': {'url': 'URL 1 with Key: $key', 'key': 'key_value'},
-                                   'api_2': {'url': 'URL 2 with Key: $key', 'key': 'key_value'}}
+        get_config.return_value = {'rest': {'symbol_api': ['alphavantage', 'eodhistoricaldata']}}
 
-        get_symbols.get_from.side_effect = symbol_api_data
+        symbol_api_delegator.get_from.side_effect = symbol_api_data
         companies_dao.find_all_symbols.return_value = db_data
 
-        self.symbol_service.update_symbols()
+        symbol_service.update_symbols()
 
         companies_dao.insert_symbols.assert_called_once_with({'ALV', 'OAS', 'TSN'})
         companies_dao.delete_delisted.assert_called_once_with({'AMZN', 'ABCD'})

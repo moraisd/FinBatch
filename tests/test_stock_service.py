@@ -9,10 +9,10 @@ from config.config_reader import get_root_dir
 from stock import stock_service
 
 
-@patch('scheduler.stock_service.companies_dao')
-@patch('scheduler.stock_service.rest_api.get_data')
-@patch('scheduler.stock_service.get_config')
-@patch('scheduler.stock_service.process_stock')
+@patch('stock.stock_service.companies_dao')
+@patch('stock.stock_service.rest_api.get_data')
+@patch('stock.stock_service.get_config')
+@patch('stock.stock_service.process_stock')
 class StockServiceTest(TestCase):
 
     def setUp(self) -> None:
@@ -57,8 +57,8 @@ class StockServiceTest(TestCase):
         process_stock.assert_has_calls([call(stock) for stock in one_blacklisted_four_processed if stock],
                                        any_order='True')
         self.assertEqual(process_stock.call_count, 4)
-        expected_sucessful_processed = [[stock['Symbol'], stock] for stock in one_blacklisted_four_processed if stock]
-        companies_dao.prepare_update_one.called_with(expected_sucessful_processed)
+        expected_successful_processed = [[stock['Symbol'], stock] for stock in one_blacklisted_four_processed if stock]
+        companies_dao.prepare_update_one.called_with(expected_successful_processed)
         companies_dao.prepare_update_one.called_once_with('AAPL', {'blacklisted': True})
         companies_dao.bulk_write.called_once_with(update_one_list)
 

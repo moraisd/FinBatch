@@ -21,7 +21,7 @@ def _retrieve_process_stocks(outdated_stocks_symbols):
     stocks = []
     # TODO: Implement concurrency on these requests
     for symbol in outdated_stocks_symbols:
-        stock = rest_api.get_data(_build_stocks_data_url(symbol)).json()
+        stock = _get_stock_data(symbol).json()
         if stock.get('Symbol'):
             process_stock(stock)
             stocks.append(companies_dao.prepare_update_one(symbol, stock))
@@ -32,8 +32,10 @@ def _retrieve_process_stocks(outdated_stocks_symbols):
     return stocks
 
 
-def _build_stocks_data_url(symbol):
-    return str((get_config()["rest"]["fundamental_data_api"]["url"])
+@rest_api.get_data_dec
+def _get_stock_data(symbol):
+    fundamental_data_api_config = get_config()["rest"]["fundamental_data_api"]
+    return str((fundamental_data_api_config["url"])
                .replace('$function', 'OVERVIEW')
                .replace('$symbol', symbol)
-               .replace('$key', get_config()["rest"]["fundamental_data_api"]["key"]))
+               .replace('$key', fundamental_data_api_config["key"]))
