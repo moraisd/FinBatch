@@ -12,11 +12,11 @@ _scheduler = BlockingScheduler()
 _executions_counter = 0
 
 
-def run_and_schedule_symbol_job():
+def schedule_symbol_job():
     _scheduler.add_job(update_symbols, IntervalTrigger(days=1), next_run_time=dt.datetime.now())
 
 
-def run_and_schedule_update_stocks_job():
+def schedule_update_stocks_job():
     _scheduler.add_job(update_stocks, IntervalTrigger(minutes=1), id='update_stock')
 
 
