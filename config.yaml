@@ -1,17 +1,32 @@
 rest:
   fundamental_data_api:
-    url: 'https://www.alphavantage.co/query?function=$function&symbol=$symbol&apikey=$key'
-    key: JULI7BLT9T36YLN2
-    requests_per_minute: 5
-    requests_per_day: 500
+    #    alphavantage:
+    #      url: 'https://www.alphavantage.co/query?function=$function&symbol=$symbol&apikey=$key'
+    #      key: G2Z3DW6BP8AF32PZ
+    #      requests_per_day: 25
+    #      requests_per_minute: 25
+    fmp:
+      #      key: eHzGu6EnXdjsqDjPs9zcospcpKKxcJHG
+      key: KChjhk1eP34ZjjQT7FFLXwB1hllbovSa
+      requests_per_day: 237
+      #      requests_per_minute: 250
+      requests_per_stock: 3
   symbol_api:
-    eodhistoricaldata:
-      url: 'https://eodhistoricaldata.com/api/exchange-symbol-list/US?api_token=$key'
-      key: '6234cff2ba7c31.29252804'
-    alphavantage:
-      url: 'https://www.alphavantage.co/query?function=LISTING_STATUS&apikey=$key'
-      key: JULI7BLT9T36YLN2
+    fmp:
+      key: KChjhk1eP34ZjjQT7FFLXwB1hllbovSa
+#      key: eHzGu6EnXdjsqDjPs9zcospcpKKxcJHG
+#    eodhistoricaldata:
+#      url: 'https://eodhistoricaldata.com/api/exchange-symbol-list/US?api_token=$key'
+#      key: '6234cff2ba7c31.29252804'
+#    alphavantage:
+#      url: 'https://www.alphavantage.co/query?function=LISTING_STATUS&apikey=$key'
+#      key: JULI7BLT9T36YLN2
 
 db:
   database_url: 'mongodb://localhost:27017/'
   database: mydatabase
+
+graphql:
+  companies_ms:
+    url: 'http://localhost:8080/graphql'
+
