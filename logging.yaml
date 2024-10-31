@@ -21,6 +21,9 @@ loggers:
   info:
     level: INFO
     handlers: [ file ]
+  gql:
+    level: WARNING
+    handlers: [ console, file ]
 root:
   handlers: [ console , file ]
   level: INFO

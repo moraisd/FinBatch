@@ -1,7 +1,7 @@
 import datetime as dt
 from unittest import TestCase
 
-from stock.stock_processor import process_stock
+from stock.stock_processor_alphavantage import process_stock
 
 
 class TestStockProcessor(TestCase):
