@@ -22,6 +22,12 @@ class TestSymbolApiDelegator(TestCase):
 
         eod_reader.read.assert_called_once_with(from_api(eod).text)
 
+    @patch('symbol.symbol_api_delegator.fmp_reader')
+    def test_fmp(self, fmp_reader):
+        fmp = 'fmp'
+        symbol_api_delegator.get_from(fmp)
+        fmp_reader.read.assert_called_once()
+
     def test_invalid(self):
         with self.assertRaises(RuntimeError) as context:
             symbol_api_delegator.get_from('invalidAPI')

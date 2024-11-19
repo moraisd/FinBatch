@@ -1,0 +1,58 @@
+[ 
+  {
+    "symbol": "ACU",
+    "name": "Acme United Corporation",
+    "price": 41.19,
+    "exchange": "American Stock Exchange",
+    "exchangeShortName": "AMEX",
+    "type": "stock"
+  },
+  {
+    "symbol": "SQM",
+    "name": "Sociedad Química y Minera de Chile S.A.",
+    "price": 40.38,
+    "exchange": "New York Stock Exchange",
+    "exchangeShortName": "NYSE",
+    "type": "stock"
+  },
+  {
+    "symbol": "AAPL",
+    "name": "Apple Inc.",
+    "price": 230.57,
+    "exchange": "NASDAQ Global Select",
+    "exchangeShortName": "NASDAQ",
+    "type": "stock"
+  },
+  {
+    "symbol": "IBKR",
+    "name": "Interactive Brokers Group, Inc.",
+    "price": 148.2,
+    "exchange": "NASDAQ Global Select",
+    "exchangeShortName": "NASDAQ",
+    "type": "stock"
+  },
+  {
+    "symbol": "USIM5.SA",
+    "name": "Usinas Siderúrgicas de Minas Gerais S.A.",
+    "price": 6.37,
+    "exchange": "São Paulo",
+    "exchangeShortName": "SAO",
+    "type": "stock"
+  },
+    {
+    "symbol": "JSLNX",
+    "name": "Janus Henderson Global Select Fund N Shares",
+    "price": 20.01,
+    "exchange": "NASDAQ",
+    "exchangeShortName": "NASDAQ",
+    "type": "trust"
+  },
+    {
+    "symbol": "STHS.L",
+    "name": "PIMCO ETFs plc - PIMCO US Short-Term High Yield Corporate Bond Index UCITS ETF",
+    "price": 8.953,
+    "exchange": "London Stock Exchange",
+    "exchangeShortName": "LSE",
+    "type": "etf"
+  }
+]

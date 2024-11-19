@@ -39,10 +39,6 @@ def delete_stocks(symbols):
     return _run_request(request, params)
 
 
-def _run_request(request, params=None):
-    return graphql_config.get_client().execute(gql(request), variable_values=params)
-
-
 def find_most_outdated_stocks(limit):
     _log.info("Looking up outdated stocks")
 
@@ -59,9 +55,13 @@ def update_stocks(companies):
     _log.info("Updating stocks")
 
     request = """
-    mutation insert($companies: [CompanyInput]) {
+    mutation($companies: [CompanyInput]) {
         updateCompanies(companies: $companies)
     }
     """
     params = {'companies': companies}
     _run_request(request, params)
+
+
+def _run_request(request, params=None):
+    return graphql_config.get_client().execute(gql(request), variable_values=params)

@@ -5,10 +5,11 @@ rest:
     #      key: G2Z3DW6BP8AF32PZ
     #      requests_per_day: 25
     #      requests_per_minute: 25
+    #      requests_per_stock: 1
     fmp:
-      #      key: eHzGu6EnXdjsqDjPs9zcospcpKKxcJHG
-      key: KChjhk1eP34ZjjQT7FFLXwB1hllbovSa
-      requests_per_day: 237
+      key: eHzGu6EnXdjsqDjPs9zcospcpKKxcJHG
+      #      key: KChjhk1eP34ZjjQT7FFLXwB1hllbovSa
+      requests_per_day: 250
       #      requests_per_minute: 250
       requests_per_stock: 3
   symbol_api:
@@ -21,10 +22,6 @@ rest:
 #    alphavantage:
 #      url: 'https://www.alphavantage.co/query?function=LISTING_STATUS&apikey=$key'
 #      key: JULI7BLT9T36YLN2
-
-db:
-  database_url: 'mongodb://localhost:27017/'
-  database: mydatabase
 
 graphql:
   companies_ms:

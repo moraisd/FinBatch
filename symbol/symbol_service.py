@@ -9,25 +9,27 @@ _log = logging.getLogger(__name__)
 
 def update_symbols():
     _log.info("Updating symbols")
-    external_symbol_list = list()
+    external_symbol_set = set()
     symbol_apis = get_config()['rest']['symbol_api']
 
     for api in symbol_apis:
-        external_symbol_list += symbol_api_delegator.get_from(api)
+        external_symbol_set |= symbol_api_delegator.get_from(api)
 
     microservice_symbol_set = set(companies_microservice.retrieve_all_symbols())
-
-    external_symbol_set = {values['symbol'] for values in external_symbol_list}
 
     new_symbols = external_symbol_set - microservice_symbol_set
     delisted_symbols = microservice_symbol_set - external_symbol_set
 
     if new_symbols:
         _log.info(f'Number of symbols to be added: {len(new_symbols)}')
-        companies_microservice.insert_symbols(external_symbol_list)
+        companies_microservice.insert_symbols(_generate_graphql_schema(new_symbols))
 
     if delisted_symbols:
         _log.info(f'Number of symbols to be delisted: {len(delisted_symbols)}')
         companies_microservice.delete_stocks(delisted_symbols)
 
     _log.info("Finished updating symbols")
+
+
+def _generate_graphql_schema(new_symbols):
+    return [{'symbol': symbol} for symbol in new_symbols]

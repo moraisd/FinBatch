@@ -10,7 +10,7 @@ _log = logging.getLogger(__name__)
 
 def update_stocks():
     max_requests = stock_api_delegator.get_max_requests(get_config())
-    outdated_stocks_symbols = set(companies_microservice.find_most_outdated_stocks(max_requests))
+    outdated_stocks_symbols = companies_microservice.find_most_outdated_stocks(max_requests)
 
     _log.info(f'Updating the following stock data: {outdated_stocks_symbols}')
     companies_microservice.update_stocks(_retrieve_process_stocks(outdated_stocks_symbols))
@@ -24,13 +24,6 @@ def _retrieve_process_stocks(outdated_stocks_symbols):
         for _ in range(floor(apis[api]['requests_per_day'] / apis[api]['requests_per_stock'])):
             symbol = outdated_stocks_symbols.pop()
             stock = stock_api_delegator.get_from(api, symbol)
+            stocks.append(stock)
 
-            if stock:
-                _log.debug(f'Found data for {symbol}: {stock}')
-                stock['symbol'] = symbol
-                stocks.append(stock)
-            else:
-                _log.debug(stock)
-                _log.info(f'Blacklisting {symbol}: No data found')
-                stocks.append({'symbol': symbol, 'blacklisted': True})
     return stocks

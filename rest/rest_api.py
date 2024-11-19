@@ -5,8 +5,8 @@ from requests import Response
 
 
 def get_data_dec(func):
-    def inner(url):
-        return get_data(func(url))
+    def inner(api, function, symbol):
+        return get_data(func(api, function, symbol)).json()
 
     return inner
 

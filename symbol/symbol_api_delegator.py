@@ -2,7 +2,7 @@ from symbol import alphavantage_reader, eod_reader, fmp_reader
 from util.symbol_api_url import from_api
 
 
-def get_from(api):
+def get_from(api) -> set:
     match api:
         case 'alphavantage':
             return alphavantage_reader.read(from_api(api).text)
