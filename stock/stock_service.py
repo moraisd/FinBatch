@@ -1,4 +1,5 @@
 import logging
+from concurrent.futures import ThreadPoolExecutor
 from math import floor
 
 from config.config_reader import get_config
@@ -18,12 +19,13 @@ def update_stocks():
 
 
 def _retrieve_process_stocks(outdated_stocks_symbols):
-    stocks = []
+    stock_future = []
     apis = get_config()['rest']['fundamental_data_api']
-    for api in apis:
-        for _ in range(floor(apis[api]['requests_per_day'] / apis[api]['requests_per_stock'])):
-            symbol = outdated_stocks_symbols.pop()
-            stock = stock_api_delegator.get_from(api, symbol)
-            stocks.append(stock)
+    with ThreadPoolExecutor(max_workers=50) as executor:
+        for api in apis:
+            for _ in range(floor(apis[api]['requests_per_day'] / apis[api]['requests_per_stock'])):
+                symbol = outdated_stocks_symbols.pop()
+                stock_future.append(executor.submit(stock_api_delegator.get_from, api, symbol))
 
-    return stocks
+    return [stock.result() for stock in stock_future]
+
