@@ -14,18 +14,17 @@ def update_stocks():
     outdated_stocks_symbols = companies_microservice.find_most_outdated_stocks(max_requests)
 
     _log.info(f'Updating the following stock data: {outdated_stocks_symbols}')
-    companies_microservice.update_stocks(_retrieve_process_stocks(outdated_stocks_symbols))
+    companies_microservice.update_stocks(_retrieve_and_process_stocks(outdated_stocks_symbols))
     _log.info(f'Finished updating {outdated_stocks_symbols}')
 
 
-def _retrieve_process_stocks(outdated_stocks_symbols):
-    stock_future = []
+def _retrieve_and_process_stocks(outdated_stocks_symbols):
+    stocks_future = []
     apis = get_config()['rest']['fundamental_data_api']
-    with ThreadPoolExecutor(max_workers=50) as executor:
+    with ThreadPoolExecutor(max_workers=get_config()['thread_pool_executor']['max_workers']) as executor:
         for api in apis:
             for _ in range(floor(apis[api]['requests_per_day'] / apis[api]['requests_per_stock'])):
                 symbol = outdated_stocks_symbols.pop()
-                stock_future.append(executor.submit(stock_api_delegator.get_from, api, symbol))
+                stocks_future.append(executor.submit(stock_api_delegator.get_from, api, symbol))
 
-    return [stock.result() for stock in stock_future]
-
+    return [stock.result() for stock in stocks_future]

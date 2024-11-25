@@ -7,9 +7,9 @@ rest:
     #      requests_per_minute: 25
     #      requests_per_stock: 1
     fmp:
-      key: eHzGu6EnXdjsqDjPs9zcospcpKKxcJHG
-      #      key: KChjhk1eP34ZjjQT7FFLXwB1hllbovSa
-      requests_per_day: 250
+      #      key: eHzGu6EnXdjsqDjPs9zcospcpKKxcJHG
+      key: KChjhk1eP34ZjjQT7FFLXwB1hllbovSa
+      requests_per_day: 249
       #      requests_per_minute: 250
       requests_per_stock: 3
   symbol_api:
@@ -27,3 +27,5 @@ graphql:
   companies_ms:
     url: 'http://localhost:8080/graphql'
 
+thread_pool_executor:
+  max_workers: 100
