@@ -41,6 +41,9 @@ class StockServiceTest(TestCase):
     @staticmethod
     def _generate_config(get_config):
         get_config.return_value = {
+            'thread_pool_executor': {
+                'max_workers': 250
+            },
             'rest': {
                 'fundamental_data_api': {
                     'fmp':
