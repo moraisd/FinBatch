@@ -1,20 +1,22 @@
-[tool.poetry]
-name = "FinBatch"
+[project]
+name = "finbatch"
 version = "0.1.0"
 description = ""
-authors = ["Daniel <moraisd@protonmail.com>"]
+authors = [
+    {name = "Daniel",email = "moraisd@protonmail.com"}
+]
 readme = "README.md"
+requires-python = ">=3.13,<4"
+dependencies = [
+    "pyyaml (>=6.0.2)",
+    "apscheduler(>=3.10.4)",
+    "gql[requests,aiohttp](>=3.5.0)",
+    "fmpsdk(>=20240330.0)",
+    "coverage(>=7.6.4)",
+    "parameterized(>=0.9.0)"
+]
 
-[tool.poetry.dependencies]
-python = "^3.12"
-pyyaml = "^6.0.2"
-requests = "^2.32.3"
-apscheduler = "^3.10.4"
-gql = { extras = ["requests"], version = "^3.5.0" }
-fmpsdk = "^20240330.0"
-coverage = "^7.6.4"
-parameterized = "^0.9.0"
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
