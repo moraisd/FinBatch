@@ -13,11 +13,8 @@ async def main():
     try:
         loop.run_forever()
     except (KeyboardInterrupt, Exception):
-        # Gracefully shut down on Ctrl+C
-        print("\nShutting down scheduler...")
         scheduler_shutdown()
         loop.stop()
-        print("Scheduler and event loop stopped.")
 
 
 if __name__ == '__main__':
