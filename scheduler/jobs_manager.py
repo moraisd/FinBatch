@@ -13,7 +13,7 @@ _executions_counter = 0
 
 
 def schedule_symbol_job():
-    _scheduler.add_job(update_symbols, IntervalTrigger(days=1), next_run_time=dt.datetime.now())
+    _scheduler.add_job(update_symbols, IntervalTrigger(days=1), next_run_time=dt.datetime.now(), id='update_symbols')
 
 
 def schedule_update_stocks_job():
