@@ -2,45 +2,45 @@ import logging
 
 from gql import gql
 
-from config import graphql_config
+from config.graphql_config import get_client
 
 _log = logging.getLogger(__name__)
 
 
-def retrieve_all_symbols():
-    _log.info("Retrieving all symbols")
+async def retrieve_all_symbols():
+    _log.info('Retrieving all symbols')
 
-    return _run_request("""
+    return (await _run_request("""
     {
       symbols
     }
-    """)['symbols']
+    """))['symbols']
 
 
-def insert_symbols(symbols):
-    _log.info("Updating symbols")
+async def insert_symbols(symbols):
+    _log.info('Updating symbols')
     request = """
         mutation ($companies: [CompanyInput]) {
             persistSymbols(companies: $companies)
         }
         """
     params = {'companies': symbols}
-    return _run_request(request, params)
+    _log.info(f'Inserting result: {await _run_request(request, params)}')
 
 
-def delete_stocks(symbols):
-    _log.info("Deleting stocks")
+async def delete_stocks(symbols):
+    _log.info('Deleting stocks')
     request = """
     mutation($symbols:[String!]!){
         deleteBySymbol(symbols:$symbols)
     }
     """
     params = {'symbols': list(symbols)}
-    return _run_request(request, params)
+    await _run_request(request, params)
 
 
-def find_most_outdated_stocks(limit):
-    _log.info("Looking up outdated stocks")
+async def find_most_outdated_stocks(limit):
+    _log.info('Looking up outdated stocks')
 
     request = """
     query($limit:Int!){
@@ -48,11 +48,11 @@ def find_most_outdated_stocks(limit):
     }
     """
     params = {'limit': limit}
-    return _run_request(request, params)['findMostOutdatedStocks']
+    return (await _run_request(request, params))['findMostOutdatedStocks']
 
 
-def update_stocks(companies):
-    _log.info("Updating stocks")
+async def update_stocks(companies):
+    _log.info('Updating stocks')
 
     request = """
     mutation($companies: [CompanyInput]) {
@@ -60,8 +60,9 @@ def update_stocks(companies):
     }
     """
     params = {'companies': companies}
-    _run_request(request, params)
+    await _run_request(request, params)
 
 
-def _run_request(request, params=None):
-    return graphql_config.get_client().execute(gql(request), variable_values=params)
+async def _run_request(request, params=None):
+    async with get_client() as session:
+        return await session.execute(gql(request), variable_values=params)
