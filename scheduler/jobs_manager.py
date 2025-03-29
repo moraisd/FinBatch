@@ -2,18 +2,18 @@ import datetime
 import datetime as dt
 
 from apscheduler.events import EVENT_JOB_EXECUTED
-from apscheduler.schedulers.blocking import BlockingScheduler
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 
 from stock.stock_service import update_stocks
 from symbol.symbol_service import update_symbols
 
-_scheduler = BlockingScheduler()
+_scheduler = AsyncIOScheduler()
 _executions_counter = 0
 
 
 def schedule_symbol_job():
-    _scheduler.add_job(update_symbols, IntervalTrigger(days=1), next_run_time=dt.datetime.now())
+    _scheduler.add_job(update_symbols, IntervalTrigger(days=1), next_run_time=dt.datetime.now(), id='update_symbols')
 
 
 def schedule_update_stocks_job():
@@ -48,3 +48,7 @@ def _next_day():
 
 def run_jobs():
     _scheduler.start()
+
+
+def scheduler_shutdown():
+    _scheduler.shutdown()
