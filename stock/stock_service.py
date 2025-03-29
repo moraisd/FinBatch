@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from concurrent.futures import ThreadPoolExecutor
 from math import floor
@@ -9,12 +10,12 @@ from stock import stock_api_delegator
 _log = logging.getLogger(__name__)
 
 
-def update_stocks():
+async def update_stocks():
     max_requests = stock_api_delegator.get_max_requests(get_config())
-    outdated_stocks_symbols = companies_microservice.find_most_outdated_stocks(max_requests)
+    outdated_stocks_symbols = await companies_microservice.find_most_outdated_stocks(max_requests)
 
     _log.info(f'Updating the following stock data: {outdated_stocks_symbols}')
-    companies_microservice.update_stocks(_retrieve_and_process_stocks(outdated_stocks_symbols))
+    await companies_microservice.update_stocks(_retrieve_and_process_stocks(outdated_stocks_symbols))
     _log.info(f'Finished updating {outdated_stocks_symbols}')
 
 
